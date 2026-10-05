@@ -43,5 +43,6 @@ def test_spike_shopping_list(client):
     assert data["store"] == "Lidl"
     assert 6 <= len(data["items"]) <= 8
     for item in data["items"]:
-        assert set(item) == {"name", "quantity", "note"}
+        assert set(item) == {"name", "quantity", "note", "title"}
         assert item["name"] and item["quantity"]
+        assert item["title"] == f"{item['name']} {item['quantity']}"

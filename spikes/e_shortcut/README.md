@@ -18,19 +18,22 @@ Dauer: Stufe A ca. 15 Minuten, Stufe B ca. 10 Minuten.
 
 ## Stufe A: Kurzbefehl mit eingebauten Testdaten (ohne Server)
 
+> **Wichtig (gelernt im Test):** Im Titelfeld von *Add New Reminder* muss eine **Variable** stehen, erkennbar am kleinen orangen Symbol vor dem Namen. Normaler Text im Feld wird wörtlich als Titel angelegt. Variable einsetzen: Feld **leeren**, dann in der Leiste über der Tastatur **Dictionary Value** wählen.
+
+> **Englische Oberfläche?** Die Aktionsnamen heißen dann: *Text* (Text), *Get Dictionary from Input* (Wörterbuch abrufen aus Eingabe), *Get Dictionary Value* (Wert für Schlüssel in Wörterbuch abrufen), *Repeat with Each* (Für jedes Element wiederholen), *Add New Reminder* (Neue Erinnerung hinzufügen), *Get Contents of URL* (Inhalt von URL abrufen). Zwischenprüfung: Nach der Aktion *Get Dictionary Value* mit Schlüssel `items` zeigt ▶ eine Vorschau mit 3 Einträgen.
 ### Kurzbefehl anlegen
 1. **Kurzbefehle**-App → oben rechts **+** → oben auf den Namen tippen → **Umbenennen** → `Einkauf Test A`.
 2. **Aktion hinzufügen** → suchen: **Text** → in das Textfeld diesen JSON-Text einfügen (Text kopieren, in das Feld einfügen):
    ```
-   {"items":[{"name":"Skyr","quantity":"500 g","note":""},{"name":"Haferflocken","quantity":"1 Packung","note":"kernig"},{"name":"Eier","quantity":"10 Stück","note":"Freiland"}]}
+   {"items":[{"title":"Skyr 500 g","note":""},{"title":"Haferflocken 1 Packung","note":"kernig"},{"title":"Eier 10 Stück","note":"Freiland"}]}
    ```
 3. **Aktion hinzufügen** → **Wörterbuch abrufen aus Eingabe** (englisch: *Get Dictionary from Input*). Eingabe: das Ergebnis des Textes (wird automatisch verbunden).
 4. **Aktion hinzufügen** → **Wert für Schlüssel in Wörterbuch abrufen**. Schlüssel: `items`. Eingabe: **Wörterbuch** aus Schritt 3 (blaues Feld antippen, Variable wählen).
 5. **Aktion hinzufügen** → **Für jedes Element wiederholen**. Eingabe: **Wörterbuchwert** aus Schritt 4.
-6. **Innerhalb** der Wiederholung (zwischen „Für jedes“ und „Ende der Wiederholung“):
-   - **Wert für Schlüssel in Wörterbuch abrufen**, Schlüssel `name`, Eingabe **Wiederholungselement**.
-   - **Wert für Schlüssel in Wörterbuch abrufen**, Schlüssel `quantity`, Eingabe **Wiederholungselement**.
-   - **Neue Erinnerung hinzufügen**: im Feld **Erinnerung** erst die Variable *Wörterbuchwert* (name), dann ein Leerzeichen, dann die Variable *Wörterbuchwert 2* (quantity) eintragen. Beim Feld **Liste** `ZZ Test-Einkauf` wählen. Über **Mehr anzeigen** (Pfeil an der Aktion) siehst du weitere Felder (Notiz, Datum).
+6. **Innerhalb** der Wiederholung (zwischen „Für jedes“ und „Ende der Wiederholung“), **zwei** Aktionen:
+   - **Wert für Schlüssel in Wörterbuch abrufen** (*Get Dictionary Value*), Schlüssel `title`, Eingabe **Wiederholungselement** (*Repeat Item*).
+   - **Neue Erinnerung hinzufügen** (*Add New Reminder*): Das Titelfeld ist ein Variablenfeld. Tippe darauf und wähle **Wörterbuchwert** (*Dictionary Value*) aus der Liste. Beim Feld **Liste** `ZZ Test-Einkauf` wählen.
+   - Hinweis: Der Titel kommt bewusst **fertig** aus dem JSON (`title`, z. B. „Skyr 500 g“), weil sich im Titelfeld keine mehreren Variablen mischen lassen.
 7. **Fertig** antippen.
 
 ### Ausführen und prüfen
@@ -81,10 +84,10 @@ Windows fragt nach Firewall-Freigabe: **Private Netzwerke zulassen** (nicht öff
 ## Ergebnisse eintragen
 | Prüfpunkt | Ergebnis |
 |---|---|
-| Stufe A: 3 Einträge erscheinen in `ZZ Test-Einkauf` | ⬜ |
-| Stufe A: Einträge erscheinen auf Liesas iPhone (nach wie vielen Sekunden?) | ⬜ |
-| Stufe A: Abhaken auf Liesas Gerät erscheint bei dir | ⬜ |
-| Stufe A: zweiter Lauf erzeugt Duplikate (erwartet) | ⬜ |
+| Stufe A: 3 Einträge erscheinen in der Testliste | ✅ (2026-10-05) |
+| Stufe A: Einträge erscheinen auf Liesas iPhone | ✅ nach ca. 30 Sekunden (iCloud-Sync, nicht beeinflussbar) |
+| Stufe A: Abhaken auf Liesas Gerät erscheint bei dir | ✅ |
+| Stufe A: zweiter Lauf erzeugt Duplikate (erwartet) | ✅ bestätigt: Einträge werden dupliziert |
 | Stufe B: Safari zeigt das JSON im WLAN | ⬜ |
 | Stufe B: 8 Einträge werden angelegt | ⬜ |
 | Dauer bei ca. 30 Einträgen (optional: Testdaten verlängern) | ⬜ |
@@ -101,3 +104,11 @@ Windows fragt nach Firewall-Freigabe: **Private Netzwerke zulassen** (nicht öff
 - Die PWA bleibt die **Quelle der Wahrheit**, die Erinnerungen sind nur eine Kopie. Der Kurzbefehl sollte später nur **neue** Einträge anlegen (Phase 4: `?since=` oder „nur offene Artikel“).
 - Erinnerungen lassen sich per Kurzbefehl **hinzufügen**, aber nicht zuverlässig als „erledigt“ zurückspielen. Abgehakt wird in der PWA.
 - Fällt Stufe A durch (kein Teilen/Sync wie erwartet), bleibt die eigene PWA-Liste die einzige Liste, und der Export entfällt.
+
+## Ergebnis Stufe A (2026-10-05): bestanden
+- Der Kurzbefehl legt Einträge aus JSON in einer geteilten Liste an. Sie erscheinen nach ca. 30 Sekunden auf dem zweiten iPhone, Abhaken wird synchronisiert.
+- **Ein zweiter Lauf erzeugt Duplikate.** Das muss die App lösen (Entscheidung für Phase 4):
+  - **Server merkt sich den Export:** Jeder Eintrag bekommt `exported_at`. Der Endpunkt liefert nur Einträge **ohne** `exported_at` und setzt es beim Abruf (ein Abruf pro Einkaufstermin genügt, beide iPhones teilen sich ja die Liste).
+  - **Kurzbefehl prüft selbst:** *Find Reminders* in der Liste nach dem Titel, nur anlegen, wenn nichts gefunden wird. Das ist robuster, wenn Einträge von Hand gelöscht werden, braucht aber mehr Aktionen.
+  - Empfehlung: erst die Server-Variante, bei Bedarf plus die Prüfung im Kurzbefehl.
+- Der Export ist eine **Einbahnstraße** (App → Erinnerungen). Das Abhaken in den Erinnerungen kommt nicht zurück in die App, abgehakt wird in der PWA.

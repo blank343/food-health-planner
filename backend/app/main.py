@@ -48,7 +48,7 @@ def health() -> dict[str, str]:
 # SPIKE-DATEN: nur zum Testen des Apple Shortcuts. Wird in Phase 4 durch die
 # echte, aus dem Wochenplan generierte Einkaufsliste ersetzt.
 # ---------------------------------------------------------------------------
-SPIKE_ITEMS = [
+_SPIKE_BASE = [
     {"name": "Skyr", "quantity": "500 g", "note": ""},
     {"name": "Haferflocken", "quantity": "1 Packung", "note": "kernig"},
     {"name": "Hähnchenbrustfilet", "quantity": "600 g", "note": ""},
@@ -58,6 +58,10 @@ SPIKE_ITEMS = [
     {"name": "Bananen", "quantity": "6 Stück", "note": ""},
     {"name": "Magerquark", "quantity": "250 g", "note": ""},
 ]
+
+# `title` ist der fertige Reminder-Titel. Der Kurzbefehl braucht dadurch nur ein Feld
+# (Apple-Shortcuts können im Titelfeld keine mehreren Variablen mischen).
+SPIKE_ITEMS = [{**item, "title": f"{item['name']} {item['quantity']}"} for item in _SPIKE_BASE]
 
 
 @app.get(
