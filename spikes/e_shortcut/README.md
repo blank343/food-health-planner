@@ -88,8 +88,8 @@ Windows fragt nach Firewall-Freigabe: **Private Netzwerke zulassen** (nicht öff
 | Stufe A: Einträge erscheinen auf Liesas iPhone | ✅ nach ca. 30 Sekunden (iCloud-Sync, nicht beeinflussbar) |
 | Stufe A: Abhaken auf Liesas Gerät erscheint bei dir | ✅ |
 | Stufe A: zweiter Lauf erzeugt Duplikate (erwartet) | ✅ bestätigt: Einträge werden dupliziert |
-| Stufe B: Safari zeigt das JSON im WLAN | ⬜ |
-| Stufe B: 8 Einträge werden angelegt | ⬜ |
+| Stufe B: Server vom iPhone im WLAN erreichbar | ✅ |
+| Stufe B: 8 Einträge werden angelegt | ✅ (2026-10-05) |
 | Dauer bei ca. 30 Einträgen (optional: Testdaten verlängern) | ⬜ |
 | Automation läuft ohne Rückfrage zur Uhrzeit (optional) | ⬜ |
 
@@ -112,3 +112,8 @@ Windows fragt nach Firewall-Freigabe: **Private Netzwerke zulassen** (nicht öff
   - **Kurzbefehl prüft selbst:** *Find Reminders* in der Liste nach dem Titel, nur anlegen, wenn nichts gefunden wird. Das ist robuster, wenn Einträge von Hand gelöscht werden, braucht aber mehr Aktionen.
   - Empfehlung: erst die Server-Variante, bei Bedarf plus die Prüfung im Kurzbefehl.
 - Der Export ist eine **Einbahnstraße** (App → Erinnerungen). Das Abhaken in den Erinnerungen kommt nicht zurück in die App, abgehakt wird in der PWA.
+
+## Ergebnis Stufe B (2026-10-05): bestanden
+- Der Kurzbefehl holt die Liste per `Get Contents of URL` (HTTP, lokales Netz) von `GET /api/spike/shopping-list.json` und legt alle 8 Einträge in der geteilten Liste an.
+- Stolperstein: Nach dem Austausch der ersten Aktionen zeigte die Variable in *Get Dictionary Value* rot auf die gelöschte Aktion. Die Eingabe muss auf **Contents of URL** umgestellt werden.
+- **Offen für den Betrieb:** Auf dem Server läuft der Abruf über die Tailscale-Adresse (HTTPS, `tailscale serve`). Tailscale muss dann auf dem iPhone verbunden sein. Das ist mit TrueNAS zu testen.
