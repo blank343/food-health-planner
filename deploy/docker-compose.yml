@@ -1,0 +1,53 @@
+# Food & Health Planner - Compose-Stack (api + db)
+#
+# UNGETESTET: Auf der Entwicklungsmaschine war kein Docker verfuegbar.
+#
+# Lokal / auf einem normalen Docker-Host:
+#   cp .env.example .env     # Werte anpassen (Passwort setzen!)
+#   docker compose up -d --build
+#
+# TrueNAS SCALE 24.10 ("Install via YAML" in Apps > Discover Apps > Custom App):
+#   - Der Dialog hat KEINEN Build-Kontext. `build: ../backend` funktioniert dort NICHT.
+#     Das api-Image muss vorher woanders gebaut und in eine Registry gepusht werden
+#     (z. B. ghcr.io oder Docker Hub, privat) und hier per `image:` referenziert werden.
+#     Siehe den auskommentierten Alternativ-Block im Service `api`.
+#   - Relative Pfade (./data/postgres) sind dort nicht sinnvoll: FHP_DB_PATH muss ein
+#     absoluter Host-Pfad auf das ZFS-Dataset sein, z. B. /mnt/tank/apps/foodhealth/postgres.
+#   - Ob ${VAR}-Ersetzung aus einer .env-Datei im YAML-Dialog funktioniert, ist zu pruefen.
+#     Im Zweifel die Werte direkt in das YAML schreiben (siehe TRUENAS.md).
+
+services:
+  api:
+    build: ../backend
+    # --- TrueNAS-Variante: `build:` oben entfernen und stattdessen verwenden ---
+    # image: ghcr.io/<dein-user>/foodhealth-api:0.1.0
+    environment:
+      FHP_ENV: ${FHP_ENV:-prod}
+      FHP_TIMEZONE: ${FHP_TIMEZONE:-Europe/Berlin}
+      # Sonderzeichen im Passwort muessen URL-kodiert werden (oder Passwort alphanumerisch waehlen).
+      FHP_DATABASE_URL: postgresql+psycopg://${FHP_DB_USER:-fhp}:${FHP_DB_PASSWORD:?FHP_DB_PASSWORD in .env setzen}@db:5432/${FHP_DB_NAME:-fhp}
+    ports:
+      - "${FHP_API_PORT:-8000}:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${FHP_DB_USER:-fhp}
+      POSTGRES_PASSWORD: ${FHP_DB_PASSWORD:?FHP_DB_PASSWORD in .env setzen}
+      POSTGRES_DB: ${FHP_DB_NAME:-fhp}
+      # Unterordner, damit das Mount-Root (ZFS-Dataset) nicht direkt PGDATA sein muss.
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      # Bind-Mount auf einen Host-Pfad (auf TrueNAS: ZFS-Dataset, absoluter Pfad).
+      - ${FHP_DB_PATH:-./data/postgres}:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped

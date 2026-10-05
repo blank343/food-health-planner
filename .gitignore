@@ -1,0 +1,38 @@
+# --- Persönliche Gesundheitsdaten: NIEMALS committen ---
+Health Daten/
+*.zip
+*.gpx
+export.xml
+export_cda.xml
+Befund_*.pdf
+HealthAutoExport*
+
+# --- Secrets / lokale Konfiguration ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# --- Python ---
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# --- Node / Frontend ---
+node_modules/
+dist/
+
+# --- Spike-Ausgaben mit echten Daten ---
+spikes/**/out/
+spikes/**/*.local.*
+
+# --- OS / Editor ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.egg-info/

@@ -1,0 +1,2 @@
+# Einheitliche Zeilenenden (LF), damit Dockerfile, YAML und Skripte plattformübergreifend funktionieren
+* text=auto eol=lf
