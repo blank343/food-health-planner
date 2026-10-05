@@ -1,11 +1,12 @@
 from datetime import datetime
-from functools import lru_cache
 from zoneinfo import ZoneInfo
 
 from fastapi import FastAPI
-from sqlalchemy import Engine, create_engine, text
+from sqlalchemy import text
 
+from app.api import router as api_router
 from app.config import get_settings
+from app.db import get_engine
 
 app = FastAPI(
     title="Food & Health Planner",
@@ -14,14 +15,7 @@ app = FastAPI(
 )
 
 
-@lru_cache
-def get_engine() -> Engine:
-    """Lazy Engine: verbindet erst beim ersten Zugriff, kurzer Verbindungs-Timeout."""
-    return create_engine(
-        get_settings().database_url,
-        connect_args={"connect_timeout": 2},
-        pool_pre_ping=True,
-    )
+app.include_router(api_router)
 
 
 def check_db() -> bool:

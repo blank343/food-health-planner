@@ -11,6 +11,9 @@ class Settings(BaseSettings):
     database_url: str = "postgresql+psycopg://fhp:fhp@db:5432/fhp"
     env: str = "dev"
     timezone: str = "Europe/Berlin"
+    # Zwischenablage für hochgeladene Importdateien (leer = Systemtemp/fhp-uploads)
+    upload_dir: str = ""
+    max_upload_mb: int = 4096
 
 
 @lru_cache

@@ -287,7 +287,7 @@ Aufwand bei Hobby-Tempo (ca. 5–8 h/Woche). **MVP = Phasen 0–4.** Gesamt grob
 | Status | Phase |
 |---|---|
 | 🔄 | Phase 0 – Fundament & Spikes (Details: `docs/SPIKES.md`) |
-| ⬜ | Phase 1 – Gesundheitsdaten & Profile |
+| 🔄 | Phase 1 – Gesundheitsdaten & Profile (Spezifikation und Ergebnis: `docs/PHASE1.md`). **1a Backend ✅ abgenommen** (Datenmodell, Importer, Rechner, API, 330 Tests, Ende-zu-Ende mit echten Daten auf SQLite und Postgres). **1b Web-Oberfläche ⬜** (Einstellungen, Ziele, Supplemente, Regeln, Trainingsplan, Uploads, Dashboard) |
 | ⬜ | Phase 2 – Rezeptbibliothek & Komponenten |
 | ⬜ | Phase 3 – Planer v1 |
 | ⬜ | Phase 4 – Einkaufsliste & PWA *(MVP)* |
@@ -302,6 +302,8 @@ Aufwand bei Hobby-Tempo (ca. 5–8 h/Woche). **MVP = Phasen 0–4.** Gesamt grob
 | 2026-10-04 | Korrektur: Christian isst unter der Woche nur Frühstück (OMAD). Slot-Modell und Planer-Checks angepasst. |
 | 2026-10-04 | Antworten Runde 1 eingearbeitet: PLZ 01662, Lidl/Aldi Nord/REWE, manueller Datenimport zuerst, pflegbare Vorlieben, Wochenend-Slots bestätigt, Frühstücks-Baukasten, Server (N100, TrueNAS SCALE, Tailscale), Rezeptquellen. |
 | 2026-10-04 | Datenfunde ergänzt, persönliche Werte in `Health Daten/Auswertung.md` ausgelagert (nicht für Git). |
+| 2026-10-05 | **Phase 1a (Backend) abgeschlossen.** 330 Tests grün. Ende-zu-Ende mit den echten Dateien über die HTTP-Schnittstelle gegen SQLite und Postgres 16: Importe (HAE 0,2 s, Apple-XML 1,3 GB in ca. 28 s), Laborbefunde, Zielwerte, Zugriffsschutz, Ablehnung eines Befunds mit falschem Geburtsdatum. Gefundene und behobene Fehler: Doppelzählung von Schritten über mehrere Quellen (Schritte ca. 35 % niedriger), Laborwerte mit zwei Einheiten, zu lange Texte in Postgres, Datum in JSON-Statistik. Neu: manuelle Gewichtseingabe (Vorrang), Wochenend-Slot-Anteile, Körpergröße aus HAE. Parallele Subagenten (Sonnet 5.5) für 6 der 8 Teile, alle vom Hauptagenten nachgeprüft. |
+| 2026-10-05 | **Phase 1 gestartet.** Spezifikation `docs/PHASE1.md`. Fundament vom Hauptagenten: Datenmodell (12 Tabellen, Alembic-Migration gegen Postgres geprüft), gemeinsame Typen und Standardwerte, Bereinigung, Ingest-Service mit Import-Jobs (12 Tests). Fünf Sonnet-5.5-Agenten arbeiten parallel an HAE-Importer, Apple-Health-Importer (inkl. Behebung der Doppelzählung von Schritten über mehrere Quellen), Labor-Parser, Rechnern (Energie, Makros, Sicherheitsgrenzen, Slots) und Auth/CLI/CRUD-API. |
 | 2026-10-05 | **Spike e, Stufe B bestanden:** Der Kurzbefehl holt die Liste vom Server und legt 8 Einträge an. Spike e ist damit abgeschlossen (Betrieb über Tailscale nach dem TrueNAS-Setup zu testen). |
 | 2026-10-05 | **Spike e, Stufe A bestanden:** Der Kurzbefehl legt Einträge in der geteilten Erinnerungsliste an, Sync auf das zweite iPhone nach ca. 30 s, Abhaken synchronisiert. Zweiter Lauf erzeugt Duplikate: Phase 4 sendet nur neue Einträge (`exported_at` am Server). Testendpunkt liefert das fertige Feld `title`. Stufe B offen. |
 | 2026-10-05 | Docker läuft lokal (WSL2). **Docker-Test bestanden:** Image baut, Compose-Stack startet, Postgres gesund, `/api/health` meldet `db: ok`, Python 3.12.15, nicht-privilegierter Benutzer, Alembic verbindet. Händlerseiten per Browser geprüft: keine Website-Nutzungsbedingungen bei Lidl/Aldi Nord gefunden (keine Erlaubnis), REWE blockiert. **Angebotsquellen neu geordnet:** Preisbasis pro Zutat (immer), Newsletter-Postfach per IMAP (automatisch), Prospekt-Upload nur optional. Erster lokaler Commit. |

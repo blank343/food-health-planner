@@ -36,3 +36,6 @@ Thumbs.db
 .idea/
 .vscode/
 *.egg-info/
+
+# Newsletter-Testmails (enthalten Adresse und persönliche Tracking-Links)
+spikes/f_newsletters/samples/
