@@ -4,8 +4,9 @@ Betrieb als **Custom App** per „Install via YAML“ (zwei Container: API mit O
 Das Image kommt aus der **GitHub Container Registry (ghcr.io)**, gebaut von GitHub Actions aus dem privaten Repo.
 Stellen, die noch nicht gegen eine echte 24.10.2.4-Installation geprüft wurden, sind mit **zu prüfen** markiert.
 
-**Bereits getestet (lokal):** Das Image baut, die Datenbank-Migration läuft beim Start automatisch, die CLI im Container
-funktioniert, ein Neustart ist idempotent. **Noch nie gelaufen:** der GitHub-Workflow und alles auf TrueNAS.
+**Bereits getestet:** Das Image baut lokal und auf GitHub (Version `0.1.0` ist unter `ghcr.io/blank343/food-health-planner`
+veröffentlicht), die Datenbank-Migration läuft beim Start automatisch, die CLI im Container funktioniert, ein Neustart ist
+idempotent, die Tests laufen grün in GitHub Actions. **Noch nie gelaufen:** alles auf TrueNAS selbst.
 
 ## 1. Überblick
 
@@ -32,11 +33,10 @@ Angelegt sind: `vm-storage/apps/food-health-planner` und darunter `postgres`.
    Bei einem Dataset mit NFSv4-ACL kann das `chown` allein nicht reichen (**zu prüfen**). Erscheint im Log des
    `db`-Containers „Permission denied“ oder „could not change permissions“, dann in der UI unter
    Datasets > `postgres` > Permissions den ACL-Typ auf **POSIX** stellen und den Besitzer 70 setzen.
-2. **Verschlüsselung:** Die Datenbank enthält Gesundheitsdaten. Prüfe unter Datasets, ob
-   `vm-storage/apps/food-health-planner` verschlüsselt ist (Schloss-Symbol). Falls nicht: ein verschlüsseltes
-   Dataset lässt sich nicht nachträglich für ein bestehendes einschalten, du müsstest ein neues anlegen und umziehen.
-   Bedenke, dass ein verschlüsseltes Dataset nach jedem Neustart entsperrt werden muss, sonst startet die App nicht
-   (**zu prüfen:** Verhalten der Apps beim Boot).
+2. **Verschlüsselung:** Das Dataset ist bewusst **nicht verschlüsselt** (privater Homeserver ohne Zugriff von außen).
+   Das hat einen praktischen Vorteil: Die App startet nach einem Neustart ohne Entsperren. Der Preis: Die Datenbank
+   mit den Gesundheitsdaten liegt im Klartext auf der Platte, und auch Snapshots und Backups sind dann unverschlüsselt.
+   Deshalb Backups nie unverschlüsselt in fremde Clouds legen (Abschnitt 8) und das Dataset nicht per SMB/NFS teilen.
 3. **Zugangsdaten für das private Image** (siehe Abschnitt 3, letzter Schritt).
 
 ## 3. GitHub: Repo, Image, Zugang
@@ -89,22 +89,26 @@ Anmeldebildschirm der App ein.
 Danach in der App: Importe (Health Auto Export, Apple Health, Laborbefund), unter „Tagesziel“ das aktuelle Gewicht
 eintragen, unter „Einstellungen“ Ziele und Grenzen pflegen.
 
-## 6. Zugriff über Tailscale
+## 6. Zugriff über Tailscale (Katalog-App)
 
 Die App sollte **nicht** ins Internet oder ins normale LAN veröffentlicht werden.
 
-- **Schnelltest:** `http://<tailscale-name-des-NAS>:9180` vom Handy (Tailscale an). Funktioniert ohne HTTPS.
-- **Mit HTTPS (empfohlen für die App auf dem Homescreen):** Tailscale-HTTPS-Zertifikate und MagicDNS müssen im
-  Tailnet aktiviert sein (Admin-Konsole > DNS). Dann auf dem Host:
+- **Erster Test:** Vom iPhone (Tailscale an) `http://<tailscale-name-oder-ip-des-NAS>:9180` öffnen. Das klappt, wenn du die
+  anderen Dienste auf dem NAS genauso erreichst (Port 9180 ist auf dem Host veröffentlicht). Funktioniert ohne HTTPS.
+- **Mit HTTPS (empfohlen für die App auf dem Homescreen, später für Offline-Betrieb nötig):** Im Tailnet müssen
+  **MagicDNS** und **HTTPS-Zertifikate** aktiviert sein (Admin-Konsole > DNS). Da Tailscale als Katalog-App in einem
+  eigenen Container läuft, zeigt `127.0.0.1` dort auf diesen Container. Als Ziel für `serve` deshalb die LAN-IP des NAS
+  verwenden (TrueNAS-Shell):
   ```bash
-  sudo tailscale serve --bg --https=443 http://127.0.0.1:9180
-  sudo tailscale serve status
+  sudo docker ps --format '{{.Names}}' | grep -i tailscale          # Name des Tailscale-Containers
+  sudo docker exec <tailscale-container> tailscale serve --bg --https=443 http://<nas-lan-ip>:9180
+  sudo docker exec <tailscale-container> tailscale serve status
   ```
-  Erreichbar unter `https://<nas-name>.<tailnet>.ts.net/`. Das gilt, wenn Tailscale **direkt auf dem TrueNAS-Host**
-  läuft. Läuft es als **Katalog-App** in einem Container, zeigt `127.0.0.1` auf diesen Container, dann als Ziel die
-  LAN-IP des NAS nehmen (`http://<nas-lan-ip>:9180`); ob `serve` dort konfigurierbar ist, ist **zu prüfen**.
-- Soll der Port im LAN nicht direkt offen sein, in der YAML `"127.0.0.1:9180:8000"` statt `"9180:8000"` verwenden
-  (passt zu Tailscale auf dem Host, nicht zur Katalog-App).
+  Erreichbar dann unter `https://<nas-name>.<tailnet>.ts.net/`. Ob `serve` in der Katalog-App dauerhaft bleibt
+  (nach Neustart oder App-Update) und ob der Container den NAS-Host unter der LAN-IP erreicht, ist **zu prüfen**.
+  Wenn `serve` Port 443 schon für einen anderen Dienst nutzt, einen anderen HTTPS-Port wählen (`--https=8443`).
+- In der YAML bleibt `"9180:8000"`, weil der Tailscale-Container den Port über die LAN-IP des NAS erreichen muss.
+  Ein direkter Zugriff aus dem LAN ist damit ebenfalls möglich; falls das nicht gewollt ist, am Router/Firewall sperren.
 
 ## 7. Prüfen
 
@@ -147,9 +151,7 @@ Wiederherstellen: App stoppen, Snapshot zurückrollen (oder Dump mit `pg_restore
 
 ## Offene Punkte (zu prüfen)
 
-- GitHub-Workflow: bisher nie gelaufen.
-- Besitzerrechte für uid 70 auf dem Dataset (ACL-Typ) und Verschlüsselungsstatus des Datasets.
+- Besitzerrechte für uid 70 auf dem Dataset (ACL-Typ). Das `chown` ist ausgeführt, ob es reicht, zeigt der erste Start.
 - Bleibt der `docker login` für ghcr.io nach Neustart und TrueNAS-Update erhalten?
 - Containername der API (`docker ps`) und Docker-CLI-Zugriff auf dem Host in 24.10.2.4.
-- Tailscale: direkt auf dem Host oder als Katalog-App (bestimmt, worauf `serve` zeigt).
-- Verhalten der Apps beim Boot mit gesperrtem verschlüsseltem Dataset.
+- Tailscale-Katalog-App: Container-Name, ob `serve` dauerhaft bleibt, ob der Container die NAS-LAN-IP erreicht.
