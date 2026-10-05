@@ -1,165 +1,155 @@
-# Food & Health Planner auf TrueNAS SCALE 24.10 (ElectricEel 24.10.2.4)
+# Food Health Planner auf TrueNAS SCALE 24.10 (ElectricEel 24.10.2.4)
 
-Anleitung, um das Backend (API + PostgreSQL) als **Custom App** per "Install via YAML" zu betreiben.
-Alles, was nicht gegen eine echte 24.10.2.4-Installation geprüft wurde, ist mit **zu prüfen** markiert.
-Der Compose-Stack und das Dockerfile sind bisher **nicht** mit Docker getestet.
+Betrieb als **Custom App** per „Install via YAML“ (zwei Container: API mit Oberfläche und PostgreSQL).
+Das Image kommt aus der **GitHub Container Registry (ghcr.io)**, gebaut von GitHub Actions aus dem privaten Repo.
+Stellen, die noch nicht gegen eine echte 24.10.2.4-Installation geprüft wurden, sind mit **zu prüfen** markiert.
 
-## 0. Voraussetzungen
+**Bereits getestet (lokal):** Das Image baut, die Datenbank-Migration läuft beim Start automatisch, die CLI im Container
+funktioniert, ein Neustart ist idempotent. **Noch nie gelaufen:** der GitHub-Workflow und alles auf TrueNAS.
 
-- TrueNAS SCALE 24.10.2.4 mit eingerichtetem Apps-Pool (Apps > Settings > Choose Pool).
-- Ein Pool, hier `tank` genannt (an den eigenen Poolnamen anpassen).
-- Ein Container-Image der API in einer Registry (siehe Abschnitt 2), weil der YAML-Dialog nicht bauen kann.
-- Tailscale auf dem NAS oder als App, falls der Zugriff übers Tailnet laufen soll (Abschnitt 5).
+## 1. Überblick
 
-## 1. Datasets anlegen
+```
+GitHub (privates Repo) --Actions--> ghcr.io/<owner>/food-health-planner:<version>   (privates Image)
+                                              |
+TrueNAS: Custom App "food-health-planner" ----+   Container api (Port 9180 -> 8000) + db (Postgres 16)
+Daten:   /mnt/vm-storage/apps/food-health-planner/postgres   (dein Dataset)
+Zugriff: nur über Tailscale vom iPhone/Laptop
+```
 
-Datasets > Add Dataset:
+Das Image enthält nur Code und die gebaute Oberfläche, **keine Gesundheitsdaten** (`.dockerignore` schließt sie aus).
 
-1. Übergeordnet: `tank/apps` (existiert evtl. schon), darunter `tank/apps/foodhealth`.
-2. Darunter `tank/apps/foodhealth/postgres` für die Datenbankdateien.
+## 2. Einmalige Vorbereitung auf TrueNAS
 
-**Verschlüsselung:** Die Datenbank wird Gesundheitsdaten enthalten. Daher `tank/apps/foodhealth`
-mit **Verschlüsselung** anlegen (Encryption aktivieren, Passphrase oder Key), sodass `postgres`
-als Kind-Dataset erbt. Beachten: Ein verschlüsseltes Dataset muss nach jedem Neustart
-entsperrt werden, sonst startet die App nicht (zu prüfen: Verhalten der Apps beim Boot mit
-gesperrtem Dataset). Verschlüsselung lässt sich nachträglich nicht einfach für ein
-bestehendes Dataset einschalten, deshalb gleich beim Anlegen entscheiden.
+Angelegt sind: `vm-storage/apps/food-health-planner` und darunter `postgres`.
 
-Dataset-Optionen für `postgres`: Compression lz4 (Standard). Record Size 8K bis 16K
-passt zur PostgreSQL-Seitengröße von 8K (der beste Wert ist zu prüfen; der Standard von 128K funktioniert ebenfalls).
+1. **Besitzer für PostgreSQL setzen.** Das Image `postgres:16-alpine` läuft als Benutzer mit **uid/gid 70**.
+   In der TrueNAS-Shell (System > Shell oder SSH):
+   ```bash
+   sudo chown -R 70:70 /mnt/vm-storage/apps/food-health-planner/postgres
+   sudo chmod 700 /mnt/vm-storage/apps/food-health-planner/postgres
+   ```
+   Bei einem Dataset mit NFSv4-ACL kann das `chown` allein nicht reichen (**zu prüfen**). Erscheint im Log des
+   `db`-Containers „Permission denied“ oder „could not change permissions“, dann in der UI unter
+   Datasets > `postgres` > Permissions den ACL-Typ auf **POSIX** stellen und den Besitzer 70 setzen.
+2. **Verschlüsselung:** Die Datenbank enthält Gesundheitsdaten. Prüfe unter Datasets, ob
+   `vm-storage/apps/food-health-planner` verschlüsselt ist (Schloss-Symbol). Falls nicht: ein verschlüsseltes
+   Dataset lässt sich nicht nachträglich für ein bestehendes einschalten, du müsstest ein neues anlegen und umziehen.
+   Bedenke, dass ein verschlüsseltes Dataset nach jedem Neustart entsperrt werden muss, sonst startet die App nicht
+   (**zu prüfen:** Verhalten der Apps beim Boot).
+3. **Zugangsdaten für das private Image** (siehe Abschnitt 3, letzter Schritt).
 
-## 2. API-Image bereitstellen
+## 3. GitHub: Repo, Image, Zugang
 
-Der Custom-App-YAML-Dialog unterstützt kein `build:`. Das Image muss daher auf einem
-anderen Rechner gebaut werden (dort mit Docker):
+1. **Privates Repo** auf GitHub anlegen und den Code pushen (`Health Daten/` ist per `.gitignore` ausgeschlossen).
+2. **Image bauen lassen:** Der Workflow `.github/workflows/build.yml` testet bei jedem Push und baut das Image bei einem
+   Versions-Tag:
+   ```bash
+   git tag v0.1.0
+   git push origin v0.1.0
+   ```
+   Danach liegt das Image unter `ghcr.io/<github-name>/food-health-planner:0.1.0` (GitHub > Repo > Packages).
+   Es ist **privat** und mit dem Repo verknüpft.
+3. **Lesezugriff für TrueNAS:** GitHub > Settings > Developer settings > Personal access tokens > *Tokens (classic)* >
+   Berechtigung nur **`read:packages`**, möglichst kurze Laufzeit. Dann in der TrueNAS-Shell:
+   ```bash
+   sudo docker login ghcr.io -u <github-name>
+   # Passwort: das Token einfügen (wird nicht angezeigt)
+   ```
+   Der Login steht danach in `/root/.docker/config.json`. Ob er Neustarts und TrueNAS-Updates übersteht, ist **zu prüfen**.
+   **Ausweg ohne Login:** Das Paket unter GitHub > Packages > Package settings auf **Public** stellen. Es enthält nur
+   Code, keine Gesundheitsdaten und keine Zugangsdaten.
+
+## 4. App installieren
+
+1. TrueNAS > Apps > Discover Apps > **Custom App** > *Install via YAML*, Name `food-health-planner`.
+2. Inhalt von `deploy/truenas-app.yaml` einfügen und anpassen:
+   - **Passwort** an **beiden** Stellen (`POSTGRES_PASSWORD` und in `FHP_DATABASE_URL`) durch dasselbe,
+     selbst erzeugte Passwort aus Buchstaben und Ziffern ersetzen (`openssl rand -hex 16`).
+   - **Image-Tag** auf die veröffentlichte Version setzen.
+   - Port `9180` ist ein Vorschlag (TrueNAS belegt Ports unter 9000 häufig selbst). Bei Konflikt anderen wählen.
+3. Speichern. Status unter Apps > Installed, Logs über das Log-Symbol (beide Container prüfen).
+   Beim ersten Start legt die API die Tabellen selbst an (Migration), das dauert einige Sekunden.
+4. Das YAML enthält das Passwort im Klartext: nicht in Git, nicht in Chats.
+
+## 5. Erster Start: Personen anlegen
+
+Containernamen herausfinden und die Verwaltungs-CLI im API-Container ausführen (TrueNAS-Shell):
 
 ```bash
-cd backend
-docker build -t ghcr.io/<dein-user>/foodhealth-api:0.1.0 .
-docker push ghcr.io/<dein-user>/foodhealth-api:0.1.0
+sudo docker ps --format '{{.Names}}'          # z. B. ix-food-health-planner-api-1 (zu prüfen)
+sudo docker exec -it <api-container> python -m app.cli create-person --name <Name> --sex m --birth 1990-01-01
+sudo docker exec -it <api-container> python -m app.cli create-person --name <Name2> --sex f --birth 1992-02-02
 ```
 
-Hinweise:
+Jede Person bekommt **einmalig** ein Zugangstoken angezeigt. Sicher aufbewahren (z. B. Passwortmanager), nicht in
+Chats weitergeben. Mit `rotate-token --name <Name>` lässt sich ein neues erzeugen. Das Token gibst du auf dem
+Anmeldebildschirm der App ein.
 
-- Das Image enthält keine Gesundheitsdaten (nur Code). Das Repository trotzdem **privat** halten.
-- Bei privater Registry braucht TrueNAS Zugangsdaten (Registry-Login in den Apps-Einstellungen; genaue Stelle zu prüfen).
-- Architektur: Das NAS ist vermutlich amd64. Auf ARM-Rechnern mit `--platform linux/amd64` bauen (zu prüfen).
-- Das Dockerfile ist ungetestet; der erste Build kann Korrekturen erfordern.
+Danach in der App: Importe (Health Auto Export, Apple Health, Laborbefund), unter „Tagesziel“ das aktuelle Gewicht
+eintragen, unter „Einstellungen“ Ziele und Grenzen pflegen.
 
-## 3. Berechtigungen für PostgreSQL
+## 6. Zugriff über Tailscale
 
-Das Image `postgres:16-alpine` läuft mit dem Benutzer `postgres` mit **uid/gid 70**
-(Debian-basierte Images nutzen 999, daher bewusst alpine).
+Die App sollte **nicht** ins Internet oder ins normale LAN veröffentlicht werden.
 
-**Variante A (empfohlen):** Datasets > `tank/apps/foodhealth/postgres` > Permissions > Edit:
+- **Schnelltest:** `http://<tailscale-name-des-NAS>:9180` vom Handy (Tailscale an). Funktioniert ohne HTTPS.
+- **Mit HTTPS (empfohlen für die App auf dem Homescreen):** Tailscale-HTTPS-Zertifikate und MagicDNS müssen im
+  Tailnet aktiviert sein (Admin-Konsole > DNS). Dann auf dem Host:
+  ```bash
+  sudo tailscale serve --bg --https=443 http://127.0.0.1:9180
+  sudo tailscale serve status
+  ```
+  Erreichbar unter `https://<nas-name>.<tailnet>.ts.net/`. Das gilt, wenn Tailscale **direkt auf dem TrueNAS-Host**
+  läuft. Läuft es als **Katalog-App** in einem Container, zeigt `127.0.0.1` auf diesen Container, dann als Ziel die
+  LAN-IP des NAS nehmen (`http://<nas-lan-ip>:9180`); ob `serve` dort konfigurierbar ist, ist **zu prüfen**.
+- Soll der Port im LAN nicht direkt offen sein, in der YAML `"127.0.0.1:9180:8000"` statt `"9180:8000"` verwenden
+  (passt zu Tailscale auf dem Host, nicht zur Katalog-App).
 
-- User und Group `70` (numerische ID; ob die UI eine nicht existierende ID direkt akzeptiert, ist zu prüfen).
-- Mode `0700`. "Apply permissions recursively" nur nutzen, solange das Dataset leer ist.
-- Falls das Dataset den ACL-Typ NFSv4 hat und die UI einen ACL-Editor zeigt: ACL-Typ **POSIX** wählen
-  bzw. einen Eintrag für uid 70 mit Full Control setzen (zu prüfen, welcher Weg in 24.10 sauberer ist).
-
-**Variante B:** Der offizielle Postgres-Entrypoint startet als root und setzt den Besitzer des
-Datenverzeichnisses auf `postgres`, bevor er Rechte abgibt. Bei einem leeren Dataset kann es daher auch ohne
-manuelle Rechte klappen. Bei ACL-Datasets kann das `chown` scheitern (zu prüfen). Bei Fehlern wie
-`could not change permissions of directory` oder `Permission denied` im Log zurück zu Variante A.
-
-## 4. Custom App per YAML installieren
-
-1. Apps > Discover Apps > **Custom App** bzw. *Install via YAML*.
-2. Name: `foodhealth`.
-3. Inhalt von `deploy/docker-compose.yml` einfügen und anpassen:
-   - Im Service `api`: Zeile `build: ../backend` **löschen**, die Zeile `image: ghcr.io/<dein-user>/foodhealth-api:0.1.0` aktivieren und anpassen.
-   - `${FHP_DB_PATH:-./data/postgres}` ersetzen durch den absoluten Pfad `/mnt/tank/apps/foodhealth/postgres`.
-   - `${FHP_DB_PASSWORD...}` ersetzen durch ein selbst erzeugtes alphanumerisches Passwort
-     (z. B. `openssl rand -hex 24`). Dasselbe Passwort in `POSTGRES_PASSWORD` **und** in `FHP_DATABASE_URL`.
-   - Ob der Dialog `${VAR}`-Ersetzung aus einer `.env`-Datei kennt, ist **zu prüfen**. Sicherer ist, alle `${...}`-Platzhalter durch feste Werte zu ersetzen.
-   - Ob `depends_on` mit `condition: service_healthy` und `healthcheck` im Dialog akzeptiert werden, ist **zu prüfen** (es ist Standard-Compose, sollte also gehen).
-4. Das YAML enthält danach das DB-Passwort im Klartext. Nicht in Git oder Chats weitergeben.
-5. Port: Standard `8000`. Die TrueNAS-UI kennt für eigene Apps Port-Empfehlungen/-Reservierungen (häufig ab 9000);
-   ob 8000 in 24.10 frei ist, ist **zu prüfen**. Bei Konflikt z. B. `9080:8000` verwenden und unten alle `8000` durch `9080` ersetzen.
-6. Save / Deploy. Status in Apps > Installed beobachten; Logs über das Log-Symbol der App (beide Container prüfen).
-
-Datenbank-Migrationen: Aktuell gibt es noch keine Modelle und keine Revisionen. Sobald es welche gibt
-(Phase 1+), im api-Container `alembic upgrade head` ausführen (Shell der App); eine Automatisierung beim Start ist später zu entscheiden.
-
-## 5. Zugriff übers Tailnet
-
-Die API sollte **nicht** ins Internet oder ins normale LAN veröffentlicht werden. Zugriff per Tailscale:
-
-**Variante A: Tailscale direkt auf dem TrueNAS-Host** (falls dort installiert/aktiviert):
+## 7. Prüfen
 
 ```bash
-tailscale serve --bg --https=443 http://127.0.0.1:8000
-tailscale serve status
+curl http://<nas>:9180/api/health
+# erwartet: {"status":"ok","env":"prod","db":"ok"}
 ```
 
-Voraussetzungen im Tailnet: MagicDNS und HTTPS-Zertifikate aktiviert (Admin-Konsole > DNS).
-Die App ist dann unter `https://<nas-name>.<tailnet-name>.ts.net/` erreichbar.
-Der Port wird auf allen Interfaces des Hosts veröffentlicht, `127.0.0.1:8000` sollte also vom Host aus erreichbar sein (zu prüfen).
+- `"db":"unavailable"`: DB-Container läuft nicht, falsches Passwort in `FHP_DATABASE_URL`, oder Rechte auf dem
+  Dataset (Abschnitt 2). Log des `db`-Containers prüfen.
+- Container `api` startet immer wieder neu und das Log zeigt „Datenbank-Migration nach 30 Versuchen fehlgeschlagen“:
+  gleiche Ursachen wie oben.
+- Interaktive API-Dokumentation: `/docs`.
+- Beispiel-Liste für den Kurzbefehl-Test: `/api/spike/shopping-list.json` (Spike-Daten, wird in Phase 4 ersetzt).
 
-**Variante B: Tailscale-App aus dem TrueNAS-Katalog:** Die App läuft in einem eigenen Container;
-`127.0.0.1` zeigt dann auf diesen Container, **nicht** auf den Host. Als Ziel für `serve` dann
-die LAN-IP des NAS und den veröffentlichten Port verwenden, z. B. `http://<nas-lan-ip>:8000` (zu prüfen).
-Ob `serve` in der Katalog-App konfigurierbar ist, ist ebenfalls zu prüfen.
+## 8. Snapshots und Backup
 
-Wer nur über Tailscale zugreifen will, kann in der Compose-Datei `"127.0.0.1:8000:8000"` statt `"8000:8000"`
-veröffentlichen, dann ist die API im LAN nicht direkt erreichbar. Das passt zu Variante A, nicht zu Variante B.
-
-## 6. Prüfen
-
-Vom Handy/Laptop im Tailnet (oder im LAN, falls offen):
+Ein ZFS-Snapshot eines laufenden Postgres-Datasets ist *crash-konsistent*, normalerweise per WAL-Recovery
+wiederherstellbar, aber kein garantiert sauberes Backup. Zusätzlich regelmäßig einen logischen Dump ziehen:
 
 ```bash
-curl https://<nas-name>.<tailnet-name>.ts.net/api/health
-# oder direkt: curl http://<nas-lan-ip>:8000/api/health
+sudo docker exec <db-container> pg_dump -U fhp -d fhp -Fc > /mnt/vm-storage/apps/food-health-planner/backup/fhp-$(date +%F).dump
 ```
 
-Erwartet:
+(Ordner `backup` vorher anlegen, am besten in einem ebenfalls verschlüsselten Dataset; Docker-CLI-Zugriff auf dem Host
+ist **zu prüfen**.) Snapshots: Data Protection > Periodic Snapshot Tasks > Dataset
+`vm-storage/apps/food-health-planner` (rekursiv), z. B. täglich, 14 bis 30 Tage Aufbewahrung. Vor jedem Update zusätzlich
+einen manuellen Snapshot. Gesundheitsdaten nie unverschlüsselt in fremde Clouds legen.
 
-```json
-{"status":"ok","env":"prod","db":"ok"}
-```
+Wiederherstellen: App stoppen, Snapshot zurückrollen (oder Dump mit `pg_restore` einspielen), App starten.
 
-- `"db":"unavailable"`: DB-Container läuft nicht oder noch nicht, falsches Passwort in `FHP_DATABASE_URL`, oder Rechte auf dem Dataset (siehe Abschnitt 3). Logs des `db`-Containers prüfen.
-- Beispiel-Liste für den Apple-Shortcut-Test: `/api/spike/shopping-list.json` (Spike-Daten, werden in Phase 4 ersetzt).
-- Interaktive API-Doku: `/docs`.
+## 9. Updates
 
-## 7. Snapshots und Backup
+1. Code ändern, Tests laufen lassen, committen, neuen Tag pushen (`git tag v0.1.1 && git push origin v0.1.1`).
+2. Warten, bis der Workflow grün ist und das Image unter Packages erscheint.
+3. Snapshot des Datasets anlegen.
+4. In TrueNAS die App bearbeiten, den Image-Tag in der YAML ändern, speichern. Die API startet neu und führt
+   neue Datenbank-Migrationen selbst aus.
+5. `/api/health` prüfen. Bei Problemen alten Tag eintragen (bei Migrationen ggf. Snapshot zurückrollen).
 
-**Wichtig:** Ein ZFS-Snapshot eines laufenden Postgres-Datasets ist *crash-konsistent*. Postgres kann so
-einen Snapshot normalerweise per WAL-Recovery wiederherstellen, aber es ist kein garantiert sauberes Backup.
-Zusätzlich regelmäßig einen logischen Dump ziehen:
+## Offene Punkte (zu prüfen)
 
-```bash
-docker exec <db-container> pg_dump -U fhp -d fhp -Fc > /mnt/tank/apps/foodhealth/backup/fhp-$(date +%F).dump
-```
-
-(Containername mit `docker ps` herausfinden; Ziel am besten ein eigenes, ebenfalls verschlüsseltes Dataset
-`tank/apps/foodhealth/backup`; Docker-CLI-Zugriff auf dem Host in 24.10 ist zu prüfen. Alternativ in der Shell des db-Containers
-dumpen und die Datei über ein zusätzliches Volume ablegen.)
-
-Snapshots einrichten: Data Protection > Periodic Snapshot Tasks > Add:
-
-- Dataset `tank/apps/foodhealth` (rekursiv), z. B. täglich, Aufbewahrung 14 bis 30 Tage.
-- Manueller Snapshot vor Updates: Datasets > Dataset wählen > Snapshots > Add.
-
-Wiederherstellen: App stoppen, Snapshot zurückrollen (Rollback) oder auf einen Klon zeigen, App starten.
-Gegen Hardware-Ausfall zusätzlich Replikation auf ein zweites System oder ein Cloud-Sync mit
-Verschlüsselung; Gesundheitsdaten nie unverschlüsselt in fremde Clouds legen.
-
-## 8. Updates
-
-1. Neues Image bauen und mit neuem Tag pushen (z. B. `0.1.1`).
-2. Vor dem Update einen Snapshot anlegen.
-3. In der App den Image-Tag im YAML ändern und speichern; die App wird neu erstellt.
-4. `/api/health` prüfen.
-
-## Offene Punkte (zusammengefasst)
-
-- Funktioniert `${VAR}`/`.env` im YAML-Dialog von 24.10.2.4?
-- Ist Port 8000 für Custom Apps frei oder muss ein anderer Port gewählt werden?
-- Dataset-ACL-Typ und Besitzerrechte für uid 70 (Weg über die UI).
-- Verhalten der Apps nach Neustart bei gesperrtem verschlüsseltem Dataset.
-- Registry-Login für ein privates Image in 24.10.
-- Wie genau Tailscale (Host vs. Katalog-App) `serve` auf den veröffentlichten Port zeigt.
-- Dockerfile und Compose-Datei insgesamt: bisher nie mit Docker gebaut oder gestartet.
+- GitHub-Workflow: bisher nie gelaufen.
+- Besitzerrechte für uid 70 auf dem Dataset (ACL-Typ) und Verschlüsselungsstatus des Datasets.
+- Bleibt der `docker login` für ghcr.io nach Neustart und TrueNAS-Update erhalten?
+- Containername der API (`docker ps`) und Docker-CLI-Zugriff auf dem Host in 24.10.2.4.
+- Tailscale: direkt auf dem Host oder als Katalog-App (bestimmt, worauf `serve` zeigt).
+- Verhalten der Apps beim Boot mit gesperrtem verschlüsseltem Dataset.

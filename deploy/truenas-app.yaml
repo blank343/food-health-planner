@@ -1,0 +1,53 @@
+# Food Health Planner als Custom App auf TrueNAS SCALE 24.10 (Apps > Discover Apps > Custom App > Install via YAML)
+#
+# VOR DEM EINFÜGEN anpassen (alle Stellen mit ÄNDERN):
+#   1. ÄNDERN-PASSWORT: ein selbst erzeugtes, nur aus Buchstaben und Ziffern bestehendes Passwort
+#      (z. B. in der TrueNAS-Shell: openssl rand -hex 16). Es steht an ZWEI Stellen und muss gleich sein.
+#   2. Image-Tag: die veröffentlichte Version (siehe GitHub > Packages), z. B. 0.1.0.
+# Dieses YAML enthält danach ein Passwort im Klartext: nicht in Git oder Chats weitergeben.
+#
+# Voraussetzungen: siehe deploy/TRUENAS.md (Dataset-Rechte für uid 70, Docker-Login für ghcr.io).
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: fhp
+      POSTGRES_PASSWORD: ÄNDERN-PASSWORT
+      POSTGRES_DB: fhp
+      # Unterordner, damit der Mount selbst nicht direkt das Datenverzeichnis sein muss
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - /mnt/vm-storage/apps/food-health-planner/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fhp -d fhp"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  api:
+    image: ghcr.io/blank343/food-health-planner:0.1.0   # ÄNDERN: Besitzer und Version
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      FHP_ENV: prod
+      FHP_TIMEZONE: Europe/Berlin
+      FHP_DATABASE_URL: postgresql+psycopg://fhp:ÄNDERN-PASSWORT@db:5432/fhp
+    ports:
+      # Nur auf dem Host-Loopback veröffentlichen, wenn der Zugriff ausschließlich über
+      # `tailscale serve` auf dem Host laufen soll: "127.0.0.1:9180:8000"
+      - "9180:8000"
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=3)"
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s

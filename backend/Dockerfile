@@ -25,8 +25,12 @@ COPY backend/alembic.ini ./
 COPY backend/migrations ./migrations
 RUN pip install .
 COPY --from=web /web/dist /app/web
+COPY backend/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 USER app
 EXPOSE 8000
 
+# Startet erst die Migrationen (siehe Skript), dann die App.
+ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
