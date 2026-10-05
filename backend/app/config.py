@@ -14,6 +14,8 @@ class Settings(BaseSettings):
     # Zwischenablage für hochgeladene Importdateien (leer = Systemtemp/fhp-uploads)
     upload_dir: str = ""
     max_upload_mb: int = 4096
+    # Gebaute Web-Oberfläche (leer = ../web/dist neben dem Backend; im Container /app/web)
+    web_dir: str = ""
 
 
 @lru_cache

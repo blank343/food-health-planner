@@ -1,0 +1,5461 @@
+{
+ "openapi": "3.1.0",
+ "info": {
+  "title": "Food & Health Planner",
+  "description": "Privater Essensplan und Einkaufsliste für 2 Personen.",
+  "version": "0.1.0"
+ },
+ "paths": {
+  "/api/me": {
+   "get": {
+    "tags": [
+     "Profil"
+    ],
+    "summary": "Eigenes Profil",
+    "operationId": "get_me_api_me_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/PersonOut"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   },
+   "patch": {
+    "tags": [
+     "Profil"
+    ],
+    "summary": "Profil ändern",
+    "operationId": "patch_me_api_me_patch",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PersonPatch"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/PersonOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/api/me/settings": {
+   "get": {
+    "tags": [
+     "Profil"
+    ],
+    "summary": "Einstellungen (wirksam und gespeichert)",
+    "operationId": "get_settings__api_me_settings_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SettingsOut"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   },
+   "put": {
+    "tags": [
+     "Profil"
+    ],
+    "summary": "Einstellungen ersetzen",
+    "operationId": "put_settings_api_me_settings_put",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/SettingsIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SettingsOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/api/me/goals": {
+   "get": {
+    "tags": [
+     "Ziele"
+    ],
+    "summary": "Alle Zielversionen, neueste zuerst",
+    "operationId": "list_goals_api_me_goals_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/app__api__schemas__GoalOut"
+         },
+         "type": "array",
+         "title": "Response List Goals Api Me Goals Get"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   },
+   "post": {
+    "tags": [
+     "Ziele"
+    ],
+    "summary": "Neue Zielversion",
+    "operationId": "create_goal_api_me_goals_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/GoalIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/app__api__schemas__GoalOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/api/me/goals/active": {
+   "get": {
+    "tags": [
+     "Ziele"
+    ],
+    "summary": "Zielversion, die an einem Tag gilt",
+    "operationId": "active_goal_api_me_goals_active_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "on",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "On"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/app__api__schemas__GoalOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/me/supplements": {
+   "get": {
+    "tags": [
+     "Supplemente"
+    ],
+    "summary": "Supplemente: Liste",
+    "operationId": "list_items_api_me_supplements_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/SupplementOut"
+         },
+         "type": "array",
+         "title": "Response List Items Api Me Supplements Get"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   },
+   "post": {
+    "tags": [
+     "Supplemente"
+    ],
+    "summary": "Supplemente: Anlegen",
+    "operationId": "create_item_api_me_supplements_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/SupplementIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SupplementOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/api/me/supplements/{item_id}": {
+   "get": {
+    "tags": [
+     "Supplemente"
+    ],
+    "summary": "Supplemente: Einzeln lesen",
+    "operationId": "get_item_api_me_supplements__item_id__get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "item_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Item Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SupplementOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "put": {
+    "tags": [
+     "Supplemente"
+    ],
+    "summary": "Supplemente: Ersetzen",
+    "operationId": "replace_item_api_me_supplements__item_id__put",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "item_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Item Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/SupplementIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SupplementOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "patch": {
+    "tags": [
+     "Supplemente"
+    ],
+    "summary": "Supplemente: Teilweise ändern",
+    "operationId": "patch_item_api_me_supplements__item_id__patch",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "item_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Item Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/SupplementInPatch"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SupplementOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "tags": [
+     "Supplemente"
+    ],
+    "summary": "Supplemente: Löschen",
+    "operationId": "delete_item_api_me_supplements__item_id__delete",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "item_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Item Id"
+      }
+     }
+    ],
+    "responses": {
+     "204": {
+      "description": "Successful Response"
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/me/nutrient-rules": {
+   "get": {
+    "tags": [
+     "Ernährungsregeln"
+    ],
+    "summary": "Ernährungsregeln: Liste",
+    "operationId": "list_items_api_me_nutrient_rules_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/NutrientRuleOut"
+         },
+         "type": "array",
+         "title": "Response List Items Api Me Nutrient Rules Get"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   },
+   "post": {
+    "tags": [
+     "Ernährungsregeln"
+    ],
+    "summary": "Ernährungsregeln: Anlegen",
+    "operationId": "create_item_api_me_nutrient_rules_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/NutrientRuleIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/NutrientRuleOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/api/me/nutrient-rules/{item_id}": {
+   "get": {
+    "tags": [
+     "Ernährungsregeln"
+    ],
+    "summary": "Ernährungsregeln: Einzeln lesen",
+    "operationId": "get_item_api_me_nutrient_rules__item_id__get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "item_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Item Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/NutrientRuleOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "put": {
+    "tags": [
+     "Ernährungsregeln"
+    ],
+    "summary": "Ernährungsregeln: Ersetzen",
+    "operationId": "replace_item_api_me_nutrient_rules__item_id__put",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "item_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Item Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/NutrientRuleIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/NutrientRuleOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "patch": {
+    "tags": [
+     "Ernährungsregeln"
+    ],
+    "summary": "Ernährungsregeln: Teilweise ändern",
+    "operationId": "patch_item_api_me_nutrient_rules__item_id__patch",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "item_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Item Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/NutrientRuleInPatch"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/NutrientRuleOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "tags": [
+     "Ernährungsregeln"
+    ],
+    "summary": "Ernährungsregeln: Löschen",
+    "operationId": "delete_item_api_me_nutrient_rules__item_id__delete",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "item_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Item Id"
+      }
+     }
+    ],
+    "responses": {
+     "204": {
+      "description": "Successful Response"
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/me/training-plan": {
+   "get": {
+    "tags": [
+     "Trainingsplan"
+    ],
+    "summary": "Trainingsplan: Liste",
+    "operationId": "list_items_api_me_training_plan_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/TrainingItemOut"
+         },
+         "type": "array",
+         "title": "Response List Items Api Me Training Plan Get"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   },
+   "post": {
+    "tags": [
+     "Trainingsplan"
+    ],
+    "summary": "Trainingsplan: Anlegen",
+    "operationId": "create_item_api_me_training_plan_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/TrainingItemIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/TrainingItemOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/api/me/training-plan/{item_id}": {
+   "get": {
+    "tags": [
+     "Trainingsplan"
+    ],
+    "summary": "Trainingsplan: Einzeln lesen",
+    "operationId": "get_item_api_me_training_plan__item_id__get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "item_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Item Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/TrainingItemOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "put": {
+    "tags": [
+     "Trainingsplan"
+    ],
+    "summary": "Trainingsplan: Ersetzen",
+    "operationId": "replace_item_api_me_training_plan__item_id__put",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "item_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Item Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/TrainingItemIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/TrainingItemOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "patch": {
+    "tags": [
+     "Trainingsplan"
+    ],
+    "summary": "Trainingsplan: Teilweise ändern",
+    "operationId": "patch_item_api_me_training_plan__item_id__patch",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "item_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Item Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/TrainingItemInPatch"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/TrainingItemOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "tags": [
+     "Trainingsplan"
+    ],
+    "summary": "Trainingsplan: Löschen",
+    "operationId": "delete_item_api_me_training_plan__item_id__delete",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "item_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Item Id"
+      }
+     }
+    ],
+    "responses": {
+     "204": {
+      "description": "Successful Response"
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/me/lab-rules": {
+   "get": {
+    "tags": [
+     "Laborregeln"
+    ],
+    "summary": "Laborregeln: Liste",
+    "operationId": "list_items_api_me_lab_rules_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/LabRuleOut"
+         },
+         "type": "array",
+         "title": "Response List Items Api Me Lab Rules Get"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   },
+   "post": {
+    "tags": [
+     "Laborregeln"
+    ],
+    "summary": "Laborregeln: Anlegen",
+    "operationId": "create_item_api_me_lab_rules_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/LabRuleIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/LabRuleOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/api/me/lab-rules/{item_id}": {
+   "get": {
+    "tags": [
+     "Laborregeln"
+    ],
+    "summary": "Laborregeln: Einzeln lesen",
+    "operationId": "get_item_api_me_lab_rules__item_id__get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "item_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Item Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/LabRuleOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "put": {
+    "tags": [
+     "Laborregeln"
+    ],
+    "summary": "Laborregeln: Ersetzen",
+    "operationId": "replace_item_api_me_lab_rules__item_id__put",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "item_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Item Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/LabRuleIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/LabRuleOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "patch": {
+    "tags": [
+     "Laborregeln"
+    ],
+    "summary": "Laborregeln: Teilweise ändern",
+    "operationId": "patch_item_api_me_lab_rules__item_id__patch",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "item_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Item Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/LabRuleInPatch"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/LabRuleOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "tags": [
+     "Laborregeln"
+    ],
+    "summary": "Laborregeln: Löschen",
+    "operationId": "delete_item_api_me_lab_rules__item_id__delete",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "item_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Item Id"
+      }
+     }
+    ],
+    "responses": {
+     "204": {
+      "description": "Successful Response"
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/me/imports/hae": {
+   "post": {
+    "tags": [
+     "Importe"
+    ],
+    "summary": "Health-Auto-Export-Datei importieren (.zip oder .csv)",
+    "operationId": "import_hae_api_me_imports_hae_post",
+    "requestBody": {
+     "content": {
+      "multipart/form-data": {
+       "schema": {
+        "$ref": "#/components/schemas/Body_import_hae_api_me_imports_hae_post"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "202": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ImportJobOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/api/me/imports/apple-health": {
+   "post": {
+    "tags": [
+     "Importe"
+    ],
+    "summary": "Apple-Health-Export importieren (export.zip oder export.xml)",
+    "operationId": "import_apple_health_api_me_imports_apple_health_post",
+    "requestBody": {
+     "content": {
+      "multipart/form-data": {
+       "schema": {
+        "$ref": "#/components/schemas/Body_import_apple_health_api_me_imports_apple_health_post"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "202": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ImportJobOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/api/me/imports/labs": {
+   "post": {
+    "tags": [
+     "Importe"
+    ],
+    "summary": "Laborbefund importieren (.pdf)",
+    "operationId": "import_labs_api_me_imports_labs_post",
+    "requestBody": {
+     "content": {
+      "multipart/form-data": {
+       "schema": {
+        "$ref": "#/components/schemas/Body_import_labs_api_me_imports_labs_post"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "202": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ImportJobOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/api/me/imports": {
+   "get": {
+    "tags": [
+     "Importe"
+    ],
+    "summary": "Letzte Importe (neueste zuerst, max. 20)",
+    "operationId": "list_imports_api_me_imports_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/ImportJobOut"
+         },
+         "type": "array",
+         "title": "Response List Imports Api Me Imports Get"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/api/me/imports/{job_id}": {
+   "get": {
+    "tags": [
+     "Importe"
+    ],
+    "summary": "Status eines Imports",
+    "operationId": "get_import_api_me_imports__job_id__get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "job_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Job Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ImportJobOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/me/health/daily": {
+   "get": {
+    "tags": [
+     "Gesundheitsdaten"
+    ],
+    "summary": "Tageswerte (aufsteigend nach Datum)",
+    "description": "Ohne `source`: je Tag aus allen Quellen zusammengeführt, je Feld gewinnt die Quelle mit der höchsten Priorität aus den Einstellungen (`source_priority`). Mit `source`: nur die Rohzeilen dieser Quelle.",
+    "operationId": "get_daily_api_me_health_daily_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "from",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "Erster Tag (einschließlich).",
+       "title": "From"
+      },
+      "description": "Erster Tag (einschließlich)."
+     },
+     {
+      "name": "to",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "Letzter Tag (einschließlich).",
+       "title": "To"
+      },
+      "description": "Letzter Tag (einschließlich)."
+     },
+     {
+      "name": "source",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "enum": [
+          "hae_zip",
+          "apple_health_xml"
+         ],
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "Nur diese Quelle (Rohdaten).",
+       "title": "Source"
+      },
+      "description": "Nur diese Quelle (Rohdaten)."
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/DailyOut"
+         },
+         "title": "Response Get Daily Api Me Health Daily Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/me/workouts": {
+   "get": {
+    "tags": [
+     "Gesundheitsdaten"
+    ],
+    "summary": "Workouts (neueste zuerst)",
+    "description": "Alle gespeicherten Workouts, auch wenn zwei Quellen dasselbe Training liefern (`source`).",
+    "operationId": "get_workouts_api_me_workouts_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "from",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "Erster Tag (einschließlich).",
+       "title": "From"
+      },
+      "description": "Erster Tag (einschließlich)."
+     },
+     {
+      "name": "to",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "Letzter Tag (einschließlich).",
+       "title": "To"
+      },
+      "description": "Letzter Tag (einschließlich)."
+     },
+     {
+      "name": "type",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "Nur diese Trainingsart (exakt).",
+       "title": "Type"
+      },
+      "description": "Nur diese Trainingsart (exakt)."
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 5000,
+       "minimum": 1,
+       "default": 500,
+       "title": "Limit"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/WorkoutOut"
+         },
+         "title": "Response Get Workouts Api Me Workouts Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/me/labs": {
+   "get": {
+    "tags": [
+     "Laborwerte"
+    ],
+    "summary": "Laborberichte mit Ergebnissen (neueste zuerst)",
+    "description": "Mit `flagged=true` nur Ergebnisse mit Kennzeichen L/H, mit `pending=true` nur ausstehende. Werden beide gesetzt, zählt, was mindestens eines davon erfüllt. Berichte ohne passende Ergebnisse entfallen.",
+    "operationId": "list_labs_api_me_labs_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "flagged",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "boolean",
+       "description": "Nur auffällige Werte (L/H).",
+       "default": false,
+       "title": "Flagged"
+      },
+      "description": "Nur auffällige Werte (L/H)."
+     },
+     {
+      "name": "pending",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "boolean",
+       "description": "Nur ausstehende Werte („folgt“).",
+       "default": false,
+       "title": "Pending"
+      },
+      "description": "Nur ausstehende Werte („folgt“)."
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/LabReportOut"
+         },
+         "title": "Response List Labs Api Me Labs Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/me/labs/latest": {
+   "get": {
+    "tags": [
+     "Laborwerte"
+    ],
+    "summary": "Jüngster Wert je Analyt",
+    "description": "Je Analyt der neueste nicht ausstehende Wert über alle Berichte, mit Datum und Referenz.",
+    "operationId": "latest_labs_api_me_labs_latest_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/LatestLabValueOut"
+         },
+         "type": "array",
+         "title": "Response Latest Labs Api Me Labs Latest Get"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/api/me/labs/{report_id}": {
+   "get": {
+    "tags": [
+     "Laborwerte"
+    ],
+    "summary": "Ein Laborbericht",
+    "operationId": "get_lab_api_me_labs__report_id__get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "report_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Report Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/LabReportOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/me/dashboard": {
+   "get": {
+    "tags": [
+     "Übersicht"
+    ],
+    "summary": "Übersicht",
+    "description": "Gewicht und Trend, mittlere Energie, Workouts der letzten 8 Wochen, Datenabdeckung je Quelle, Laborstand und letzte Importe. Ohne Daten sind Werte `null` bzw. Listen leer.",
+    "operationId": "get_dashboard_api_me_dashboard_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/DashboardOut"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/api/me/targets": {
+   "get": {
+    "tags": [
+     "Ziele berechnen"
+    ],
+    "summary": "Tagesziel inkl. Mahlzeiten-Verteilung",
+    "operationId": "get_targets_api_me_targets_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "date",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "Stichtag, Standard: heute",
+       "title": "Date"
+      },
+      "description": "Stichtag, Standard: heute"
+     },
+     {
+      "name": "shares",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "Slot-Anteile überschreiben, z. B. `breakfast:1,dinner:0.5`",
+       "title": "Shares"
+      },
+      "description": "Slot-Anteile überschreiben, z. B. `breakfast:1,dinner:0.5`"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/TargetsOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/me/health/manual": {
+   "post": {
+    "tags": [
+     "Messwerte"
+    ],
+    "summary": "Gewicht/Körperfett von Hand eintragen",
+    "operationId": "add_manual_measurement_api_me_health_manual_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ManualMeasurementIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ManualMeasurementOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/api/health": {
+   "get": {
+    "summary": "Health-Check",
+    "operationId": "health_api_health_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": {
+          "type": "string"
+         },
+         "type": "object",
+         "title": "Response Health Api Health Get"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/spike/shopping-list.json": {
+   "get": {
+    "summary": "SPIKE: Beispiel-Einkaufsliste (wird in Phase 4 ersetzt)",
+    "description": "SPIKE-DATEN: fest hinterlegte Beispiel-Einkaufsliste zum Testen des Apple Shortcuts. Dieser Endpoint wird in Phase 4 durch die echte, aus dem Wochenplan generierte Einkaufsliste ersetzt und ist nicht stabil.",
+    "operationId": "spike_shopping_list_api_spike_shopping_list_json_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "type": "object",
+         "title": "Response Spike Shopping List Api Spike Shopping List Json Get"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "components": {
+  "schemas": {
+   "BodyOut": {
+    "properties": {
+     "weight_kg": {
+      "type": "number",
+      "title": "Weight Kg"
+     },
+     "weight_date": {
+      "type": "string",
+      "format": "date",
+      "title": "Weight Date"
+     },
+     "body_fat_pct": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Body Fat Pct"
+     },
+     "lean_mass_kg": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Lean Mass Kg"
+     },
+     "height_cm": {
+      "type": "number",
+      "title": "Height Cm"
+     },
+     "age_years": {
+      "type": "number",
+      "title": "Age Years"
+     }
+    },
+    "type": "object",
+    "required": [
+     "weight_kg",
+     "weight_date",
+     "body_fat_pct",
+     "lean_mass_kg",
+     "height_cm",
+     "age_years"
+    ],
+    "title": "BodyOut"
+   },
+   "Body_import_apple_health_api_me_imports_apple_health_post": {
+    "properties": {
+     "file": {
+      "type": "string",
+      "contentMediaType": "application/octet-stream",
+      "title": "File",
+      "description": "Die Datei als Multipart-Feld `file`."
+     }
+    },
+    "type": "object",
+    "required": [
+     "file"
+    ],
+    "title": "Body_import_apple_health_api_me_imports_apple_health_post"
+   },
+   "Body_import_hae_api_me_imports_hae_post": {
+    "properties": {
+     "file": {
+      "type": "string",
+      "contentMediaType": "application/octet-stream",
+      "title": "File",
+      "description": "Die Datei als Multipart-Feld `file`."
+     }
+    },
+    "type": "object",
+    "required": [
+     "file"
+    ],
+    "title": "Body_import_hae_api_me_imports_hae_post"
+   },
+   "Body_import_labs_api_me_imports_labs_post": {
+    "properties": {
+     "file": {
+      "type": "string",
+      "contentMediaType": "application/octet-stream",
+      "title": "File",
+      "description": "Die Datei als Multipart-Feld `file`."
+     }
+    },
+    "type": "object",
+    "required": [
+     "file"
+    ],
+    "title": "Body_import_labs_api_me_imports_labs_post"
+   },
+   "DailyOut": {
+    "properties": {
+     "day": {
+      "type": "string",
+      "format": "date",
+      "title": "Day"
+     },
+     "weight_kg": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Weight Kg"
+     },
+     "body_fat_pct": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Body Fat Pct"
+     },
+     "lean_mass_kg": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Lean Mass Kg"
+     },
+     "active_kcal": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Active Kcal"
+     },
+     "basal_kcal": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Basal Kcal"
+     },
+     "steps": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Steps"
+     },
+     "resting_hr": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Resting Hr"
+     },
+     "hrv_ms": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Hrv Ms"
+     },
+     "sleep_h": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Sleep H"
+     }
+    },
+    "type": "object",
+    "required": [
+     "day"
+    ],
+    "title": "DailyOut",
+    "description": "Tageswerte. Einheiten: kg, Prozent 0-100, kcal, Schritte, Schläge/min, ms, Stunden."
+   },
+   "DashboardOut": {
+    "properties": {
+     "weight": {
+      "$ref": "#/components/schemas/WeightOut"
+     },
+     "energy": {
+      "$ref": "#/components/schemas/EnergyOut"
+     },
+     "workouts": {
+      "items": {
+       "$ref": "#/components/schemas/WorkoutWeekOut"
+      },
+      "type": "array",
+      "title": "Workouts"
+     },
+     "data": {
+      "items": {
+       "$ref": "#/components/schemas/SourceCoverageOut"
+      },
+      "type": "array",
+      "title": "Data"
+     },
+     "labs": {
+      "$ref": "#/components/schemas/LabsSummaryOut"
+     },
+     "imports": {
+      "items": {
+       "$ref": "#/components/schemas/ImportJobOut"
+      },
+      "type": "array",
+      "title": "Imports"
+     }
+    },
+    "type": "object",
+    "required": [
+     "weight",
+     "energy",
+     "workouts",
+     "data",
+     "labs",
+     "imports"
+    ],
+    "title": "DashboardOut"
+   },
+   "EnergyOut": {
+    "properties": {
+     "avg_active_kcal": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Avg Active Kcal"
+     },
+     "avg_basal_kcal": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Avg Basal Kcal"
+     },
+     "device_tdee_kcal": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Device Tdee Kcal"
+     },
+     "n_days": {
+      "type": "integer",
+      "title": "N Days"
+     },
+     "coverage": {
+      "type": "number",
+      "title": "Coverage"
+     },
+     "last_day": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Last Day"
+     }
+    },
+    "type": "object",
+    "required": [
+     "avg_active_kcal",
+     "avg_basal_kcal",
+     "device_tdee_kcal",
+     "n_days",
+     "coverage",
+     "last_day"
+    ],
+    "title": "EnergyOut",
+    "description": "Mittel über die letzten 28 Tage mit vollständigen Gerätedaten (Ruhe und aktiv)."
+   },
+   "GoalIn": {
+    "properties": {
+     "kind": {
+      "type": "string",
+      "enum": [
+       "lose",
+       "maintain",
+       "gain"
+      ],
+      "title": "Kind"
+     },
+     "rate_kg_per_week": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 2.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Rate Kg Per Week"
+     },
+     "kcal_modifier_pct": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 60.0,
+        "minimum": -60.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Kcal Modifier Pct"
+     },
+     "protein_g_per_kg": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 5.0,
+        "exclusiveMinimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Protein G Per Kg"
+     },
+     "fat_pct": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 60.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Fat Pct"
+     },
+     "valid_from": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Valid From"
+     },
+     "note": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 2000
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Note"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "kind"
+    ],
+    "title": "GoalIn"
+   },
+   "HTTPValidationError": {
+    "properties": {
+     "detail": {
+      "items": {
+       "$ref": "#/components/schemas/ValidationError"
+      },
+      "type": "array",
+      "title": "Detail"
+     }
+    },
+    "type": "object",
+    "title": "HTTPValidationError"
+   },
+   "ImportJobOut": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "kind": {
+      "type": "string",
+      "title": "Kind"
+     },
+     "filename": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Filename"
+     },
+     "status": {
+      "type": "string",
+      "title": "Status"
+     },
+     "progress": {
+      "type": "number",
+      "title": "Progress"
+     },
+     "message": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Message"
+     },
+     "stats": {
+      "additionalProperties": true,
+      "type": "object",
+      "title": "Stats"
+     },
+     "error": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Error"
+     },
+     "created_at": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date-time"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Created At"
+     },
+     "started_at": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date-time"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Started At"
+     },
+     "finished_at": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date-time"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Finished At"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "id",
+     "kind",
+     "filename",
+     "status",
+     "progress",
+     "message",
+     "stats",
+     "error",
+     "created_at",
+     "started_at",
+     "finished_at"
+    ],
+    "title": "ImportJobOut",
+    "description": "Stand eines Import-Jobs."
+   },
+   "LabReportOut": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "order_no": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Order No"
+     },
+     "lab_name": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Lab Name"
+     },
+     "report_type": {
+      "type": "string",
+      "title": "Report Type"
+     },
+     "sample_datetime": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date-time"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Sample Datetime"
+     },
+     "source_filename": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Source Filename"
+     },
+     "created_at": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date-time"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Created At"
+     },
+     "results": {
+      "items": {
+       "$ref": "#/components/schemas/LabResultOut"
+      },
+      "type": "array",
+      "title": "Results"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "order_no",
+     "lab_name",
+     "report_type",
+     "sample_datetime",
+     "source_filename",
+     "created_at",
+     "results"
+    ],
+    "title": "LabReportOut"
+   },
+   "LabResultOut": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "analyte": {
+      "type": "string",
+      "title": "Analyte"
+     },
+     "unit": {
+      "type": "string",
+      "title": "Unit"
+     },
+     "value": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Value"
+     },
+     "value_op": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Value Op"
+     },
+     "flag": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Flag"
+     },
+     "ref_low": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ref Low"
+     },
+     "ref_high": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ref High"
+     },
+     "ref_op": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ref Op"
+     },
+     "pending": {
+      "type": "boolean",
+      "title": "Pending"
+     },
+     "method": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Method"
+     },
+     "material": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Material"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "analyte",
+     "unit",
+     "value",
+     "value_op",
+     "flag",
+     "ref_low",
+     "ref_high",
+     "ref_op",
+     "pending",
+     "method",
+     "material"
+    ],
+    "title": "LabResultOut",
+    "description": "Ein Laborwert. `value_op` (\"<\" oder \">\") gilt für den Messwert, `ref_op` für einseitige Referenzen."
+   },
+   "LabRuleIn": {
+    "properties": {
+     "name": {
+      "type": "string",
+      "maxLength": 120,
+      "minLength": 1,
+      "title": "Name"
+     },
+     "analyte": {
+      "type": "string",
+      "maxLength": 120,
+      "minLength": 1,
+      "title": "Analyte"
+     },
+     "comparator": {
+      "type": "string",
+      "enum": [
+       "lt",
+       "gt",
+       "between",
+       "outside_ref"
+      ],
+      "title": "Comparator"
+     },
+     "threshold_low": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Threshold Low"
+     },
+     "threshold_high": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Threshold High"
+     },
+     "effect_key": {
+      "type": "string",
+      "maxLength": 60,
+      "minLength": 1,
+      "title": "Effect Key"
+     },
+     "effect_weight": {
+      "type": "number",
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Effect Weight",
+      "default": 0.5
+     },
+     "enabled": {
+      "type": "boolean",
+      "title": "Enabled",
+      "default": true
+     },
+     "doctor_confirmed": {
+      "type": "boolean",
+      "title": "Doctor Confirmed",
+      "default": false
+     },
+     "suggested_by_app": {
+      "type": "boolean",
+      "title": "Suggested By App",
+      "default": false
+     },
+     "source": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 200
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Source"
+     },
+     "note": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 2000
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Note"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "name",
+     "analyte",
+     "comparator",
+     "effect_key"
+    ],
+    "title": "LabRuleIn"
+   },
+   "LabRuleInPatch": {
+    "properties": {
+     "name": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 120,
+        "minLength": 1
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Name"
+     },
+     "analyte": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 120,
+        "minLength": 1
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Analyte"
+     },
+     "comparator": {
+      "anyOf": [
+       {
+        "type": "string",
+        "enum": [
+         "lt",
+         "gt",
+         "between",
+         "outside_ref"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Comparator"
+     },
+     "threshold_low": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Threshold Low"
+     },
+     "threshold_high": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Threshold High"
+     },
+     "effect_key": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 60,
+        "minLength": 1
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Effect Key"
+     },
+     "effect_weight": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 1.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Effect Weight"
+     },
+     "enabled": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Enabled"
+     },
+     "doctor_confirmed": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Doctor Confirmed"
+     },
+     "suggested_by_app": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Suggested By App"
+     },
+     "source": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 200
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Source"
+     },
+     "note": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 2000
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Note"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "title": "LabRuleInPatch"
+   },
+   "LabRuleOut": {
+    "properties": {
+     "name": {
+      "type": "string",
+      "maxLength": 120,
+      "minLength": 1,
+      "title": "Name"
+     },
+     "analyte": {
+      "type": "string",
+      "maxLength": 120,
+      "minLength": 1,
+      "title": "Analyte"
+     },
+     "comparator": {
+      "type": "string",
+      "enum": [
+       "lt",
+       "gt",
+       "between",
+       "outside_ref"
+      ],
+      "title": "Comparator"
+     },
+     "threshold_low": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Threshold Low"
+     },
+     "threshold_high": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Threshold High"
+     },
+     "effect_key": {
+      "type": "string",
+      "maxLength": 60,
+      "minLength": 1,
+      "title": "Effect Key"
+     },
+     "effect_weight": {
+      "type": "number",
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Effect Weight",
+      "default": 0.5
+     },
+     "enabled": {
+      "type": "boolean",
+      "title": "Enabled",
+      "default": true
+     },
+     "doctor_confirmed": {
+      "type": "boolean",
+      "title": "Doctor Confirmed",
+      "default": false
+     },
+     "suggested_by_app": {
+      "type": "boolean",
+      "title": "Suggested By App",
+      "default": false
+     },
+     "source": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 200
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Source"
+     },
+     "note": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 2000
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Note"
+     },
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "name",
+     "analyte",
+     "comparator",
+     "effect_key",
+     "id"
+    ],
+    "title": "LabRuleOut"
+   },
+   "LabsSummaryOut": {
+    "properties": {
+     "latest_report_date": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Latest Report Date"
+     },
+     "latest_report_type": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Latest Report Type"
+     },
+     "flagged_count": {
+      "type": "integer",
+      "title": "Flagged Count"
+     },
+     "pending_count": {
+      "type": "integer",
+      "title": "Pending Count"
+     }
+    },
+    "type": "object",
+    "required": [
+     "latest_report_date",
+     "latest_report_type",
+     "flagged_count",
+     "pending_count"
+    ],
+    "title": "LabsSummaryOut"
+   },
+   "LatestLabValueOut": {
+    "properties": {
+     "analyte": {
+      "type": "string",
+      "title": "Analyte"
+     },
+     "unit": {
+      "type": "string",
+      "title": "Unit"
+     },
+     "value": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Value"
+     },
+     "value_op": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Value Op"
+     },
+     "flag": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Flag"
+     },
+     "ref_low": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ref Low"
+     },
+     "ref_high": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ref High"
+     },
+     "ref_op": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ref Op"
+     },
+     "report_id": {
+      "type": "integer",
+      "title": "Report Id"
+     },
+     "report_date": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Report Date"
+     }
+    },
+    "type": "object",
+    "required": [
+     "analyte",
+     "unit",
+     "value",
+     "value_op",
+     "flag",
+     "ref_low",
+     "ref_high",
+     "ref_op",
+     "report_id",
+     "report_date"
+    ],
+    "title": "LatestLabValueOut",
+    "description": "Jüngster vorhandener Wert eines Analyten über alle Berichte."
+   },
+   "MacroOut": {
+    "properties": {
+     "kcal": {
+      "type": "number",
+      "title": "Kcal"
+     },
+     "protein_g": {
+      "type": "number",
+      "title": "Protein G"
+     },
+     "fat_g": {
+      "type": "number",
+      "title": "Fat G"
+     },
+     "carb_g": {
+      "type": "number",
+      "title": "Carb G"
+     }
+    },
+    "type": "object",
+    "required": [
+     "kcal",
+     "protein_g",
+     "fat_g",
+     "carb_g"
+    ],
+    "title": "MacroOut"
+   },
+   "ManualMeasurementIn": {
+    "properties": {
+     "day": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Day",
+      "description": "Datum, Standard: heute"
+     },
+     "weight_kg": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 300.0,
+        "minimum": 30.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Weight Kg"
+     },
+     "body_fat_pct": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 60.0,
+        "minimum": 2.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Body Fat Pct"
+     },
+     "lean_mass_kg": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 200.0,
+        "minimum": 20.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Lean Mass Kg"
+     }
+    },
+    "type": "object",
+    "title": "ManualMeasurementIn"
+   },
+   "ManualMeasurementOut": {
+    "properties": {
+     "day": {
+      "type": "string",
+      "format": "date",
+      "title": "Day"
+     },
+     "weight_kg": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Weight Kg"
+     },
+     "body_fat_pct": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Body Fat Pct"
+     },
+     "lean_mass_kg": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Lean Mass Kg"
+     }
+    },
+    "type": "object",
+    "required": [
+     "day",
+     "weight_kg",
+     "body_fat_pct",
+     "lean_mass_kg"
+    ],
+    "title": "ManualMeasurementOut"
+   },
+   "NutrientRuleIn": {
+    "properties": {
+     "subject": {
+      "type": "string",
+      "maxLength": 80,
+      "minLength": 1,
+      "title": "Subject"
+     },
+     "kind": {
+      "type": "string",
+      "enum": [
+       "max",
+       "min",
+       "avoid",
+       "target"
+      ],
+      "title": "Kind"
+     },
+     "value": {
+      "anyOf": [
+       {
+        "type": "number",
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Value"
+     },
+     "unit": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 20
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Unit"
+     },
+     "per": {
+      "type": "string",
+      "enum": [
+       "day",
+       "week"
+      ],
+      "title": "Per",
+      "default": "day"
+     },
+     "hard": {
+      "type": "boolean",
+      "title": "Hard",
+      "default": true
+     },
+     "enabled": {
+      "type": "boolean",
+      "title": "Enabled",
+      "default": true
+     },
+     "doctor_confirmed": {
+      "type": "boolean",
+      "title": "Doctor Confirmed",
+      "default": false
+     },
+     "suggested_by_app": {
+      "type": "boolean",
+      "title": "Suggested By App",
+      "default": false
+     },
+     "source": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 200
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Source"
+     },
+     "note": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 2000
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Note"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "subject",
+     "kind"
+    ],
+    "title": "NutrientRuleIn"
+   },
+   "NutrientRuleInPatch": {
+    "properties": {
+     "subject": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 80,
+        "minLength": 1
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Subject"
+     },
+     "kind": {
+      "anyOf": [
+       {
+        "type": "string",
+        "enum": [
+         "max",
+         "min",
+         "avoid",
+         "target"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Kind"
+     },
+     "value": {
+      "anyOf": [
+       {
+        "type": "number",
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Value"
+     },
+     "unit": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 20
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Unit"
+     },
+     "per": {
+      "anyOf": [
+       {
+        "type": "string",
+        "enum": [
+         "day",
+         "week"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Per"
+     },
+     "hard": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Hard"
+     },
+     "enabled": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Enabled"
+     },
+     "doctor_confirmed": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Doctor Confirmed"
+     },
+     "suggested_by_app": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Suggested By App"
+     },
+     "source": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 200
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Source"
+     },
+     "note": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 2000
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Note"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "title": "NutrientRuleInPatch"
+   },
+   "NutrientRuleOut": {
+    "properties": {
+     "subject": {
+      "type": "string",
+      "maxLength": 80,
+      "minLength": 1,
+      "title": "Subject"
+     },
+     "kind": {
+      "type": "string",
+      "enum": [
+       "max",
+       "min",
+       "avoid",
+       "target"
+      ],
+      "title": "Kind"
+     },
+     "value": {
+      "anyOf": [
+       {
+        "type": "number",
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Value"
+     },
+     "unit": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 20
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Unit"
+     },
+     "per": {
+      "type": "string",
+      "enum": [
+       "day",
+       "week"
+      ],
+      "title": "Per",
+      "default": "day"
+     },
+     "hard": {
+      "type": "boolean",
+      "title": "Hard",
+      "default": true
+     },
+     "enabled": {
+      "type": "boolean",
+      "title": "Enabled",
+      "default": true
+     },
+     "doctor_confirmed": {
+      "type": "boolean",
+      "title": "Doctor Confirmed",
+      "default": false
+     },
+     "suggested_by_app": {
+      "type": "boolean",
+      "title": "Suggested By App",
+      "default": false
+     },
+     "source": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 200
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Source"
+     },
+     "note": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 2000
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Note"
+     },
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "subject",
+     "kind",
+     "id"
+    ],
+    "title": "NutrientRuleOut"
+   },
+   "PersonOut": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "name": {
+      "type": "string",
+      "title": "Name"
+     },
+     "sex": {
+      "type": "string",
+      "enum": [
+       "m",
+       "f"
+      ],
+      "title": "Sex"
+     },
+     "birth_date": {
+      "type": "string",
+      "format": "date",
+      "title": "Birth Date"
+     },
+     "height_cm": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Height Cm"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "id",
+     "name",
+     "sex",
+     "birth_date",
+     "height_cm"
+    ],
+    "title": "PersonOut"
+   },
+   "PersonPatch": {
+    "properties": {
+     "name": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 80,
+        "minLength": 1
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Name"
+     },
+     "sex": {
+      "anyOf": [
+       {
+        "type": "string",
+        "enum": [
+         "m",
+         "f"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Sex"
+     },
+     "birth_date": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Birth Date"
+     },
+     "height_cm": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 260.0,
+        "minimum": 50.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Height Cm"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "title": "PersonPatch"
+   },
+   "PersonSettings": {
+    "properties": {
+     "kcal_floor": {
+      "anyOf": [
+       {
+        "type": "number",
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Kcal Floor"
+     },
+     "protein_floor_g_per_kg": {
+      "type": "number",
+      "minimum": 0.0,
+      "title": "Protein Floor G Per Kg",
+      "default": 1.2
+     },
+     "max_rate_kg_per_week": {
+      "anyOf": [
+       {
+        "type": "number",
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Max Rate Kg Per Week"
+     },
+     "weight_floor_kg": {
+      "anyOf": [
+       {
+        "type": "number",
+        "exclusiveMinimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Weight Floor Kg"
+     },
+     "bf_floor_pct": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 60.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Bf Floor Pct"
+     },
+     "taper_weight_kg": {
+      "type": "number",
+      "minimum": 0.0,
+      "title": "Taper Weight Kg",
+      "default": 3.0
+     },
+     "taper_bf_pct_points": {
+      "type": "number",
+      "minimum": 0.0,
+      "title": "Taper Bf Pct Points",
+      "default": 2.0
+     },
+     "kcal_per_kg": {
+      "type": "number",
+      "exclusiveMinimum": 0.0,
+      "title": "Kcal Per Kg",
+      "default": 7700.0
+     },
+     "use_katch_mcardle": {
+      "type": "boolean",
+      "title": "Use Katch Mcardle",
+      "default": false
+     },
+     "tdee_calibration": {
+      "type": "boolean",
+      "title": "Tdee Calibration",
+      "default": true
+     },
+     "reported_intake_kcal": {
+      "anyOf": [
+       {
+        "type": "number",
+        "exclusiveMinimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Reported Intake Kcal"
+     },
+     "day_type_weights": {
+      "additionalProperties": {
+       "type": "number"
+      },
+      "type": "object",
+      "title": "Day Type Weights"
+     },
+     "slot_shares": {
+      "additionalProperties": {
+       "type": "number"
+      },
+      "type": "object",
+      "title": "Slot Shares"
+     },
+     "slot_shares_weekend": {
+      "anyOf": [
+       {
+        "additionalProperties": {
+         "type": "number"
+        },
+        "type": "object"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Slot Shares Weekend"
+     },
+     "single_meal_max_kcal": {
+      "anyOf": [
+       {
+        "type": "number",
+        "exclusiveMinimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Single Meal Max Kcal"
+     },
+     "source_priority": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Source Priority"
+     }
+    },
+    "type": "object",
+    "title": "PersonSettings",
+    "description": "Alle einstellbaren Werte einer Person. Fehlende Felder = sichere Standardwerte."
+   },
+   "SettingsIn": {
+    "properties": {
+     "kcal_floor": {
+      "anyOf": [
+       {
+        "type": "number",
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Kcal Floor"
+     },
+     "protein_floor_g_per_kg": {
+      "type": "number",
+      "minimum": 0.0,
+      "title": "Protein Floor G Per Kg",
+      "default": 1.2
+     },
+     "max_rate_kg_per_week": {
+      "anyOf": [
+       {
+        "type": "number",
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Max Rate Kg Per Week"
+     },
+     "weight_floor_kg": {
+      "anyOf": [
+       {
+        "type": "number",
+        "exclusiveMinimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Weight Floor Kg"
+     },
+     "bf_floor_pct": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 60.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Bf Floor Pct"
+     },
+     "taper_weight_kg": {
+      "type": "number",
+      "minimum": 0.0,
+      "title": "Taper Weight Kg",
+      "default": 3.0
+     },
+     "taper_bf_pct_points": {
+      "type": "number",
+      "minimum": 0.0,
+      "title": "Taper Bf Pct Points",
+      "default": 2.0
+     },
+     "kcal_per_kg": {
+      "type": "number",
+      "exclusiveMinimum": 0.0,
+      "title": "Kcal Per Kg",
+      "default": 7700.0
+     },
+     "use_katch_mcardle": {
+      "type": "boolean",
+      "title": "Use Katch Mcardle",
+      "default": false
+     },
+     "tdee_calibration": {
+      "type": "boolean",
+      "title": "Tdee Calibration",
+      "default": true
+     },
+     "reported_intake_kcal": {
+      "anyOf": [
+       {
+        "type": "number",
+        "exclusiveMinimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Reported Intake Kcal"
+     },
+     "day_type_weights": {
+      "additionalProperties": {
+       "type": "number"
+      },
+      "type": "object",
+      "title": "Day Type Weights"
+     },
+     "slot_shares": {
+      "additionalProperties": {
+       "type": "number"
+      },
+      "type": "object",
+      "title": "Slot Shares"
+     },
+     "slot_shares_weekend": {
+      "anyOf": [
+       {
+        "additionalProperties": {
+         "type": "number"
+        },
+        "type": "object"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Slot Shares Weekend"
+     },
+     "single_meal_max_kcal": {
+      "anyOf": [
+       {
+        "type": "number",
+        "exclusiveMinimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Single Meal Max Kcal"
+     },
+     "source_priority": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Source Priority"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "title": "SettingsIn",
+    "description": "Wie `PersonSettings`, aber unbekannte Felder führen zu 422."
+   },
+   "SettingsOut": {
+    "properties": {
+     "effective": {
+      "$ref": "#/components/schemas/PersonSettings"
+     },
+     "stored": {
+      "additionalProperties": true,
+      "type": "object",
+      "title": "Stored"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "effective",
+     "stored"
+    ],
+    "title": "SettingsOut"
+   },
+   "SourceCoverageOut": {
+    "properties": {
+     "source": {
+      "type": "string",
+      "title": "Source"
+     },
+     "first_day": {
+      "type": "string",
+      "format": "date",
+      "title": "First Day"
+     },
+     "last_day": {
+      "type": "string",
+      "format": "date",
+      "title": "Last Day"
+     },
+     "days": {
+      "type": "integer",
+      "title": "Days"
+     }
+    },
+    "type": "object",
+    "required": [
+     "source",
+     "first_day",
+     "last_day",
+     "days"
+    ],
+    "title": "SourceCoverageOut"
+   },
+   "SupplementIn": {
+    "properties": {
+     "name": {
+      "type": "string",
+      "maxLength": 120,
+      "minLength": 1,
+      "title": "Name"
+     },
+     "dose_amount": {
+      "anyOf": [
+       {
+        "type": "number",
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Dose Amount"
+     },
+     "dose_unit": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 20
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Dose Unit"
+     },
+     "nutrients_per_day": {
+      "additionalProperties": {
+       "type": "number"
+      },
+      "propertyNames": {
+       "maxLength": 60,
+       "minLength": 1
+      },
+      "type": "object",
+      "title": "Nutrients Per Day",
+      "description": "Beitrag pro Tag, z. B. {\"zinc_mg\": 15}"
+     },
+     "taking": {
+      "type": "boolean",
+      "title": "Taking",
+      "default": true
+     },
+     "time_of_day": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 30
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Time Of Day"
+     },
+     "note": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 2000
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Note"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "name"
+    ],
+    "title": "SupplementIn"
+   },
+   "SupplementInPatch": {
+    "properties": {
+     "name": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 120,
+        "minLength": 1
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Name"
+     },
+     "dose_amount": {
+      "anyOf": [
+       {
+        "type": "number",
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Dose Amount"
+     },
+     "dose_unit": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 20
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Dose Unit"
+     },
+     "nutrients_per_day": {
+      "anyOf": [
+       {
+        "additionalProperties": {
+         "type": "number"
+        },
+        "propertyNames": {
+         "maxLength": 60,
+         "minLength": 1
+        },
+        "type": "object"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Nutrients Per Day",
+      "description": "Beitrag pro Tag, z. B. {\"zinc_mg\": 15}"
+     },
+     "taking": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Taking"
+     },
+     "time_of_day": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 30
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Time Of Day"
+     },
+     "note": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 2000
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Note"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "title": "SupplementInPatch"
+   },
+   "SupplementOut": {
+    "properties": {
+     "name": {
+      "type": "string",
+      "maxLength": 120,
+      "minLength": 1,
+      "title": "Name"
+     },
+     "dose_amount": {
+      "anyOf": [
+       {
+        "type": "number",
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Dose Amount"
+     },
+     "dose_unit": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 20
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Dose Unit"
+     },
+     "nutrients_per_day": {
+      "additionalProperties": {
+       "type": "number"
+      },
+      "propertyNames": {
+       "maxLength": 60,
+       "minLength": 1
+      },
+      "type": "object",
+      "title": "Nutrients Per Day",
+      "description": "Beitrag pro Tag, z. B. {\"zinc_mg\": 15}"
+     },
+     "taking": {
+      "type": "boolean",
+      "title": "Taking",
+      "default": true
+     },
+     "time_of_day": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 30
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Time Of Day"
+     },
+     "note": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 2000
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Note"
+     },
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "name",
+     "id"
+    ],
+    "title": "SupplementOut"
+   },
+   "TargetsOut": {
+    "properties": {
+     "date": {
+      "type": "string",
+      "format": "date",
+      "title": "Date"
+     },
+     "day_type": {
+      "type": "string",
+      "title": "Day Type"
+     },
+     "target": {
+      "$ref": "#/components/schemas/MacroOut"
+     },
+     "slots": {
+      "additionalProperties": {
+       "$ref": "#/components/schemas/MacroOut"
+      },
+      "type": "object",
+      "title": "Slots"
+     },
+     "shares": {
+      "additionalProperties": {
+       "type": "number"
+      },
+      "type": "object",
+      "title": "Shares"
+     },
+     "tdee": {
+      "$ref": "#/components/schemas/TdeeOut"
+     },
+     "body": {
+      "$ref": "#/components/schemas/BodyOut"
+     },
+     "goal": {
+      "$ref": "#/components/schemas/app__api__targets__GoalOut"
+     },
+     "warnings": {
+      "items": {
+       "$ref": "#/components/schemas/WarningOut"
+      },
+      "type": "array",
+      "title": "Warnings"
+     }
+    },
+    "type": "object",
+    "required": [
+     "date",
+     "day_type",
+     "target",
+     "slots",
+     "shares",
+     "tdee",
+     "body",
+     "goal",
+     "warnings"
+    ],
+    "title": "TargetsOut"
+   },
+   "TdeeOut": {
+    "properties": {
+     "tdee_kcal": {
+      "type": "number",
+      "title": "Tdee Kcal"
+     },
+     "device_kcal": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Device Kcal"
+     },
+     "implied_kcal": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Implied Kcal"
+     },
+     "confidence": {
+      "type": "number",
+      "title": "Confidence"
+     },
+     "method": {
+      "type": "string",
+      "title": "Method"
+     },
+     "notes": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Notes"
+     }
+    },
+    "type": "object",
+    "required": [
+     "tdee_kcal",
+     "device_kcal",
+     "implied_kcal",
+     "confidence",
+     "method",
+     "notes"
+    ],
+    "title": "TdeeOut"
+   },
+   "TrainingItemIn": {
+    "properties": {
+     "weekday": {
+      "type": "integer",
+      "maximum": 6.0,
+      "minimum": 0.0,
+      "title": "Weekday",
+      "description": "0 = Montag … 6 = Sonntag"
+     },
+     "session_type": {
+      "type": "string",
+      "maxLength": 60,
+      "minLength": 1,
+      "title": "Session Type"
+     },
+     "intensity": {
+      "type": "string",
+      "enum": [
+       "easy",
+       "moderate",
+       "hard"
+      ],
+      "title": "Intensity"
+     },
+     "start_time": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "time"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Start Time"
+     },
+     "duration_min": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 1440.0,
+        "exclusiveMinimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Duration Min"
+     },
+     "expected_kcal": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 10000.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Expected Kcal"
+     },
+     "enabled": {
+      "type": "boolean",
+      "title": "Enabled",
+      "default": true
+     },
+     "note": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 2000
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Note"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "weekday",
+     "session_type",
+     "intensity"
+    ],
+    "title": "TrainingItemIn"
+   },
+   "TrainingItemInPatch": {
+    "properties": {
+     "weekday": {
+      "anyOf": [
+       {
+        "type": "integer",
+        "maximum": 6.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Weekday",
+      "description": "0 = Montag … 6 = Sonntag"
+     },
+     "session_type": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 60,
+        "minLength": 1
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Session Type"
+     },
+     "intensity": {
+      "anyOf": [
+       {
+        "type": "string",
+        "enum": [
+         "easy",
+         "moderate",
+         "hard"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Intensity"
+     },
+     "start_time": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "time"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Start Time"
+     },
+     "duration_min": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 1440.0,
+        "exclusiveMinimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Duration Min"
+     },
+     "expected_kcal": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 10000.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Expected Kcal"
+     },
+     "enabled": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Enabled"
+     },
+     "note": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 2000
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Note"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "title": "TrainingItemInPatch"
+   },
+   "TrainingItemOut": {
+    "properties": {
+     "weekday": {
+      "type": "integer",
+      "maximum": 6.0,
+      "minimum": 0.0,
+      "title": "Weekday",
+      "description": "0 = Montag … 6 = Sonntag"
+     },
+     "session_type": {
+      "type": "string",
+      "maxLength": 60,
+      "minLength": 1,
+      "title": "Session Type"
+     },
+     "intensity": {
+      "type": "string",
+      "enum": [
+       "easy",
+       "moderate",
+       "hard"
+      ],
+      "title": "Intensity"
+     },
+     "start_time": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "time"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Start Time"
+     },
+     "duration_min": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 1440.0,
+        "exclusiveMinimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Duration Min"
+     },
+     "expected_kcal": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 10000.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Expected Kcal"
+     },
+     "enabled": {
+      "type": "boolean",
+      "title": "Enabled",
+      "default": true
+     },
+     "note": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 2000
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Note"
+     },
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "weekday",
+     "session_type",
+     "intensity",
+     "id"
+    ],
+    "title": "TrainingItemOut"
+   },
+   "ValidationError": {
+    "properties": {
+     "loc": {
+      "items": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "integer"
+        }
+       ]
+      },
+      "type": "array",
+      "title": "Location"
+     },
+     "msg": {
+      "type": "string",
+      "title": "Message"
+     },
+     "type": {
+      "type": "string",
+      "title": "Error Type"
+     },
+     "input": {
+      "title": "Input"
+     },
+     "ctx": {
+      "type": "object",
+      "title": "Context"
+     }
+    },
+    "type": "object",
+    "required": [
+     "loc",
+     "msg",
+     "type"
+    ],
+    "title": "ValidationError"
+   },
+   "WarningOut": {
+    "properties": {
+     "code": {
+      "type": "string",
+      "title": "Code"
+     },
+     "severity": {
+      "type": "string",
+      "title": "Severity"
+     },
+     "message": {
+      "type": "string",
+      "title": "Message"
+     }
+    },
+    "type": "object",
+    "required": [
+     "code",
+     "severity",
+     "message"
+    ],
+    "title": "WarningOut"
+   },
+   "WeightOut": {
+    "properties": {
+     "latest_kg": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Latest Kg"
+     },
+     "latest_date": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Latest Date"
+     },
+     "trend_kg_per_week": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Trend Kg Per Week"
+     },
+     "trend_n_points": {
+      "type": "integer",
+      "title": "Trend N Points"
+     },
+     "points": {
+      "items": {
+       "$ref": "#/components/schemas/WeightPoint"
+      },
+      "type": "array",
+      "title": "Points"
+     }
+    },
+    "type": "object",
+    "required": [
+     "latest_kg",
+     "latest_date",
+     "trend_kg_per_week",
+     "trend_n_points",
+     "points"
+    ],
+    "title": "WeightOut",
+    "description": "Gewicht aus der zusammengeführten Tagesreihe."
+   },
+   "WeightPoint": {
+    "properties": {
+     "day": {
+      "type": "string",
+      "format": "date",
+      "title": "Day"
+     },
+     "kg": {
+      "type": "number",
+      "title": "Kg"
+     }
+    },
+    "type": "object",
+    "required": [
+     "day",
+     "kg"
+    ],
+    "title": "WeightPoint"
+   },
+   "WorkoutOut": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "type": {
+      "type": "string",
+      "title": "Type"
+     },
+     "start": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Start"
+     },
+     "duration_min": {
+      "type": "number",
+      "title": "Duration Min"
+     },
+     "active_kcal": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Active Kcal"
+     },
+     "avg_hr": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Avg Hr"
+     },
+     "max_hr": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Max Hr"
+     },
+     "distance_km": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Distance Km"
+     },
+     "source": {
+      "type": "string",
+      "title": "Source"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "type",
+     "start",
+     "duration_min",
+     "active_kcal",
+     "avg_hr",
+     "max_hr",
+     "distance_km",
+     "source"
+    ],
+    "title": "WorkoutOut"
+   },
+   "WorkoutTypeStat": {
+    "properties": {
+     "count": {
+      "type": "integer",
+      "title": "Count"
+     },
+     "minutes": {
+      "type": "number",
+      "title": "Minutes"
+     }
+    },
+    "type": "object",
+    "required": [
+     "count",
+     "minutes"
+    ],
+    "title": "WorkoutTypeStat"
+   },
+   "WorkoutWeekOut": {
+    "properties": {
+     "week_start": {
+      "type": "string",
+      "format": "date",
+      "title": "Week Start"
+     },
+     "iso_week": {
+      "type": "string",
+      "title": "Iso Week"
+     },
+     "count": {
+      "type": "integer",
+      "title": "Count"
+     },
+     "total_minutes": {
+      "type": "number",
+      "title": "Total Minutes"
+     },
+     "by_type": {
+      "additionalProperties": {
+       "$ref": "#/components/schemas/WorkoutTypeStat"
+      },
+      "type": "object",
+      "title": "By Type"
+     }
+    },
+    "type": "object",
+    "required": [
+     "week_start",
+     "iso_week",
+     "count",
+     "total_minutes",
+     "by_type"
+    ],
+    "title": "WorkoutWeekOut"
+   },
+   "app__api__schemas__GoalOut": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "kind": {
+      "type": "string",
+      "enum": [
+       "lose",
+       "maintain",
+       "gain"
+      ],
+      "title": "Kind"
+     },
+     "rate_kg_per_week": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Rate Kg Per Week"
+     },
+     "kcal_modifier_pct": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Kcal Modifier Pct"
+     },
+     "protein_g_per_kg": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Protein G Per Kg"
+     },
+     "fat_pct": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Fat Pct"
+     },
+     "valid_from": {
+      "type": "string",
+      "format": "date",
+      "title": "Valid From"
+     },
+     "note": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Note"
+     },
+     "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Created At"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "id",
+     "kind",
+     "rate_kg_per_week",
+     "kcal_modifier_pct",
+     "protein_g_per_kg",
+     "fat_pct",
+     "valid_from",
+     "note",
+     "created_at"
+    ],
+    "title": "GoalOut"
+   },
+   "app__api__targets__GoalOut": {
+    "properties": {
+     "kind": {
+      "type": "string",
+      "title": "Kind"
+     },
+     "rate_kg_per_week": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Rate Kg Per Week"
+     },
+     "applied_rate_kg_per_week": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Applied Rate Kg Per Week"
+     },
+     "valid_from": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Valid From"
+     }
+    },
+    "type": "object",
+    "required": [
+     "kind",
+     "rate_kg_per_week",
+     "applied_rate_kg_per_week",
+     "valid_from"
+    ],
+    "title": "GoalOut"
+   }
+  },
+  "securitySchemes": {
+   "HTTPBearer": {
+    "type": "http",
+    "description": "Zugangstoken der Person (`python -m app.cli`)",
+    "scheme": "bearer"
+   }
+  }
+ }
+}

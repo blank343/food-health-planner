@@ -1,0 +1,15 @@
+/* Kleine SVG-Diagramme: Farben nur über Variablen aus ui.css, Schrift mindestens 12 px. */
+.chart { margin: 0 0 12px; }
+.chart-box { width: 100%; }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.chart-axis-text { fill: var(--muted); font: 12px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+.chart-value-text { fill: var(--text); font: 600 12px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+.chart-grid { stroke: var(--border); stroke-width: 1; }
+.chart-line { fill: none; stroke: var(--accent); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+.chart-dot { fill: var(--accent); stroke: var(--surface); stroke-width: 1.5; }
+.chart-bar { fill: var(--accent); }
+.chart-caption { color: var(--muted); font-size: .85rem; margin: 4px 0 0; text-align: center; }
+.chart-empty { color: var(--muted); }
+.chart-details { margin-top: 8px; }
+.chart-details > summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; color: var(--accent); font-weight: 600; }
+.chart-details-scroll { max-height: 260px; overflow-y: auto; }

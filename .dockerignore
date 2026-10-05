@@ -1,0 +1,25 @@
+# Persönliche Gesundheitsdaten: niemals in den Build-Kontext
+Health Daten
+**/*.zip
+**/*.gpx
+**/export.xml
+**/export_cda.xml
+**/Befund_*.pdf
+
+# Ballast und lokale Dateien
+.git
+.venv
+**/node_modules
+web/dist
+**/__pycache__
+**/*.pyc
+.pytest_cache
+.ruff_cache
+**/*.egg-info
+backend/tests
+spikes
+docs
+*.md
+.env
+.env.*
+**/out

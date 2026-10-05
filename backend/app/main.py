@@ -7,6 +7,7 @@ from sqlalchemy import text
 from app.api import router as api_router
 from app.config import get_settings
 from app.db import get_engine
+from app.web import mount_web
 
 app = FastAPI(
     title="Food & Health Planner",
@@ -70,3 +71,7 @@ SPIKE_ITEMS = [{**item, "title": f"{item['name']} {item['quantity']}"} for item 
 def spike_shopping_list() -> dict:
     today = datetime.now(ZoneInfo(get_settings().timezone)).date().isoformat()
     return {"date": today, "store": "Lidl", "items": SPIKE_ITEMS}
+
+
+# Web-Oberfläche zuletzt registrieren, damit alle /api-Routen Vorrang haben.
+mount_web(app)

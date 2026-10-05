@@ -18,7 +18,9 @@
 
 services:
   api:
-    build: ../backend
+    build:
+      context: ..
+      dockerfile: backend/Dockerfile
     # --- TrueNAS-Variante: `build:` oben entfernen und stattdessen verwenden ---
     # image: ghcr.io/<dein-user>/foodhealth-api:0.1.0
     environment:

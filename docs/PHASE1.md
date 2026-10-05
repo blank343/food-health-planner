@@ -164,3 +164,22 @@ Alle Endpunkte unter `/api`, Authentifizierung per `Authorization: Bearer <token
 - Zielwerte nutzen die Trainingsplan-Belastung nur, wenn ein Trainingsplan gepflegt ist (sonst gilt „easy“ bzw. „rest“).
 - Es gibt noch keine Web-Oberfläche. Bis Phase 1b dient `/docs` (OpenAPI) als Konfigurationsoberfläche, Anmeldung mit dem Token aus `python -m app.cli`.
 
+## 11. Ergebnis Phase 1b (Web-Oberfläche) – Stand 2026-10-05
+
+**Abgenommen.** 178 Tests (13 Dateien), Typprüfung und Build sauber. Seiten (Route): Übersicht (`/`), Tagesziel (`/ziele`), Importe (`/importe`), Labor (`/labor`), Supplemente (`/supplemente`), Ernährungsregeln (`/regeln`), Training (`/training`), Laborregeln (`/laborregeln`), Einstellungen (`/einstellungen`) mit Profil, Ziel, Sicherheitsgrenzen, Energiebedarf, Mahlzeiten-Verteilung, Datenquellen und Darstellung.
+
+| Prüfung | Ergebnis |
+|---|---|
+| Alle 9 Seiten im Browser mit erfundenen Daten (Handy-Breite 375 px) | laden, kein horizontales Scrollen, keine zu kleinen Bedienelemente, keine Konsolenfehler |
+| Anmeldung, Übersicht, Tagesziel gegen das echte Backend | korrekt (Gewicht, Trend, Energiebedarf, Ziele, Laborzähler) |
+| Docker-Image mit Oberfläche (zwei Stufen) gegen Postgres 16 | baut in ca. 1 Min, Oberfläche und API-Routing korrekt, unbekannte `/api`-Pfade ergeben JSON-404, keine Gesundheitsdaten im Image, Prozess läuft als nicht privilegierter Benutzer |
+
+**Bauweise:** Das Backend liefert `web/dist` aus (Rückfall auf `index.html` für App-Routen, Pfad-Traversal abgesichert, Assets langfristig gecacht). Agenten (Sonnet 5.5) bauten die Seiten parallel, getrennt nach Dateibereichen; die Ergebnisse wurden vom Hauptagenten zusammengeführt und geprüft.
+
+**Bekannte Einschränkungen**
+- Visuell nur stichprobenartig geprüft (ein Screenshot der Tagesziel-Seite; weitere Screenshots scheiterten, weil das Fenster verdeckt war). Aussehen auf dem iPhone, Dunkelmodus der übrigen Seiten und Tastaturbedienung sollten noch von einem Menschen durchgesehen werden.
+- Kein Service Worker: Die App ist installierbar (Manifest, Symbole), arbeitet aber noch nicht offline. Das folgt mit der Einkaufsliste (Phase 4).
+- Tabellenkopf „Kohlenhydrate (g)“ wird in der Tagesziel-Tabelle auf dem Handy abgeschnitten (Tabelle scrollt innerhalb ihrer Karte).
+- Fehlermeldungen des Servers für Eingaben können einzelne englische Texte von Pydantic enthalten; die Formulare prüfen vorab auf Deutsch.
+- Das Zugangstoken liegt im Browser-Speicher (`localStorage`). Für den privaten Betrieb im Tailnet vertretbar, bei einem Gerätewechsel muss es neu eingegeben werden.
+

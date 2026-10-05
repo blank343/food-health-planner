@@ -1,0 +1,13 @@
+.dropzone {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+  margin-bottom: 12px;
+}
+.dropzone.over {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.dropzone .field { margin-bottom: 0; }
+.import-howto { margin-bottom: 12px; }
+.import-howto p:last-child { margin-bottom: 0; }
