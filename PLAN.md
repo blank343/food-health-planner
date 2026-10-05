@@ -286,7 +286,7 @@ Aufwand bei Hobby-Tempo (ca. 5–8 h/Woche). **MVP = Phasen 0–4.** Gesamt grob
 ### Umsetzung
 | Status | Phase |
 |---|---|
-| 🔄 | Phase 0 – Fundament & Spikes (Details: `docs/SPIKES.md`) |
+| ✅ | Phase 0 – Fundament & Spikes (Details: `docs/SPIKES.md`). Alle technischen Spikes bestanden; der Newsletter-Test läuft parallel weiter (Mails sammeln, Auswertung steht aus) |
 | ✅ | Phase 1 – Gesundheitsdaten & Profile (Spezifikation und Ergebnis: `docs/PHASE1.md`). **1a Backend ✅** (337 Tests, Ende-zu-Ende mit echten Daten auf SQLite und Postgres). **1b Web-Oberfläche ✅** (9 Seiten, 178 Tests, Docker-Image mit Oberfläche gegen Postgres geprüft) |
 | ⬜ | Phase 2 – Rezeptbibliothek & Komponenten |
 | ⬜ | Phase 3 – Planer v1 |
@@ -302,6 +302,7 @@ Aufwand bei Hobby-Tempo (ca. 5–8 h/Woche). **MVP = Phasen 0–4.** Gesamt grob
 | 2026-10-04 | Korrektur: Christian isst unter der Woche nur Frühstück (OMAD). Slot-Modell und Planer-Checks angepasst. |
 | 2026-10-04 | Antworten Runde 1 eingearbeitet: PLZ 01662, Lidl/Aldi Nord/REWE, manueller Datenimport zuerst, pflegbare Vorlieben, Wochenend-Slots bestätigt, Frühstücks-Baukasten, Server (N100, TrueNAS SCALE, Tailscale), Rezeptquellen. |
 | 2026-10-04 | Datenfunde ergänzt, persönliche Werte in `Health Daten/Auswertung.md` ausgelagert (nicht für Git). |
+| 2026-10-05 | **Betrieb auf TrueNAS läuft.** Die App ist als Custom App installiert (Image von ghcr.io, Postgres auf dem Dataset), erreichbar im Heimnetz (Port 9180) und über Tailscale. Anmeldung mit Token funktioniert, Anzeige auf PC und iPhone in Ordnung, Gesundheitsdaten wurden erfolgreich importiert. Repo war kurz öffentlich und ist wieder privat (siehe Hinweis zur Sichtbarkeit in der Doku). Polishing der Oberfläche bewusst auf später verschoben, bis die Hauptfunktionen vorhanden sind. |
 | 2026-10-05 | **Privates GitHub-Repo** `blank343/food-health-planner` angelegt und gepusht. Der Workflow lief grün (Backend- und Web-Tests), Tag `v0.1.0` baute und veröffentlichte das Image `ghcr.io/blank343/food-health-planner` (Tags `0.1.0`, `latest`, `sha-…`). Entscheidungen: Postgres-Dataset auf TrueNAS bewusst unverschlüsselt (privater Homeserver, kein Zugriff von außen), Tailscale läuft als Katalog-App. `deploy/TRUENAS.md` entsprechend angepasst. Offen: Installation auf TrueNAS. |
 | 2026-10-05 | **Deployment vorbereitet.** Image startet jetzt mit automatischer Datenbank-Migration (idempotent, mit Wiederholung bis die DB bereit ist), lokal gegen Postgres getestet. GitHub-Actions-Workflow (`.github/workflows/build.yml`: Tests bei jedem Push, Image nach ghcr.io bei Version-Tag) und fertige TrueNAS-YAML (`deploy/truenas-app.yaml`, Pfad `/mnt/vm-storage/apps/food-health-planner/postgres`, Port 9180) erstellt, `deploy/TRUENAS.md` neu geschrieben. Workflow und TrueNAS-Teil noch ungetestet. |
 | 2026-10-05 | Projektordner von „Food & Health Planner“ in „Food Health Planner“ umbenannt (das `&` brach auf Windows die npm-Werkzeuge). Python-Umgebung neu verknüpft (`pip install -e backend[dev]`), alle Tests laufen weiter (337 Backend, 178 Web). |
