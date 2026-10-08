@@ -1,0 +1,91 @@
+/* Rezeptseiten: Karten, Balken, Sterne, Dialog. Farben nur über die Variablen aus ui.css (hell/dunkel). */
+.rc-sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.rc-sub { font-size: .9rem; margin: 0 0 8px; }
+.rc-pre { white-space: pre-wrap; overflow-wrap: anywhere; margin: 0; }
+.rc-fieldset { border: 0; padding: 0; margin: 0 0 12px; }
+.rc-fieldset > legend { padding: 0; margin-bottom: 4px; font-weight: 600; }
+.label-sm { font-size: .85rem; font-weight: 600; margin: 0 0 4px; }
+
+/* Bereiche (Rezepte / Zutaten prüfen) */
+.rc-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.rc-tabs a {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 6px 16px; border-radius: 10px;
+  border: 1px solid var(--border); background: var(--surface); color: var(--text); text-decoration: none; font-weight: 600;
+}
+.rc-tabs a[aria-current="page"] { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+
+/* Filter */
+.rc-filters { display: grid; gap: 0 12px; grid-template-columns: 1fr; }
+@media (min-width: 640px) { .rc-filters { grid-template-columns: 1fr 1fr; } }
+
+/* Kartenliste: mobil einspaltig */
+.rc-grid { list-style: none; margin: 0 0 16px; padding: 0; display: grid; gap: 12px; grid-template-columns: 1fr; }
+@media (min-width: 760px) { .rc-grid { grid-template-columns: 1fr 1fr; } }
+.rc-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: var(--gutter); box-shadow: var(--shadow); min-width: 0; }
+.rc-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.rc-card h3 { margin: 0 0 4px; overflow-wrap: anywhere; }
+.rc-facts { margin: 4px 0; }
+.rc-rating { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; margin: 8px 0; }
+.rc-fit { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+.rc-fit-summary { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; margin-bottom: 8px; }
+.rc-actions { margin: 8px 0 12px; }
+
+/* Sterne und Favorit */
+.rc-stars { display: inline-flex; }
+.rc-star {
+  min-width: 44px; min-height: 44px; border: 0; background: transparent; font-size: 1.6rem; line-height: 1;
+  color: var(--muted); cursor: pointer; border-radius: 10px;
+}
+.rc-star.on { color: var(--warn); }
+.rc-star:disabled { opacity: .55; cursor: not-allowed; }
+.rc-fav {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 4px 12px; border-radius: 999px; flex: 0 0 auto;
+  border: 1px solid var(--border); background: var(--surface); color: var(--muted); font: inherit; font-weight: 600; cursor: pointer;
+}
+.rc-fav.on { color: var(--warn); border-color: var(--warn); background: var(--warn-soft); }
+.rc-fav:disabled { opacity: .55; cursor: not-allowed; }
+
+/* Balken: Skala 0-150 % des Ziels, Markierung bei 100 % */
+.rc-bar { position: relative; height: 10px; border-radius: 999px; background: var(--surface-2); overflow: hidden; }
+.rc-bar > span { display: block; height: 100%; background: var(--accent); }
+.rc-bar.over > span { background: var(--warn); }
+.rc-bar.under > span { background: var(--info); }
+.rc-bar[aria-valuemax="150"]::after { content: ""; position: absolute; top: 0; bottom: 0; left: 66.667%; width: 2px; background: var(--text); opacity: .55; }
+.rc-macros { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.rc-macro-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 12px; font-size: .9rem; margin-bottom: 2px; }
+.rc-macro-head > span:last-child { color: var(--muted); }
+.rc-satiety { display: grid; gap: 4px; font-size: .9rem; margin: 8px 0; }
+.rc-parts { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 8px; }
+.rc-parts li { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; font-size: .9rem; }
+.rc-parts .progress { grid-column: 1 / -1; }
+
+/* Portionsregler */
+.rc-range { width: 100%; min-height: 44px; accent-color: var(--accent); }
+.rc-factor { margin-bottom: 12px; }
+.rc-factor output { font-weight: 600; }
+
+/* Zutatenliste */
+tr.rc-unassigned > th, tr.rc-unassigned > td { background: var(--warn-soft); }
+tr.rc-unassigned > th { box-shadow: inset 4px 0 0 var(--warn); }
+.rc-assign { display: block; }
+.rc-results { list-style: none; margin: 0 0 8px; padding: 0; display: grid; gap: 6px; }
+.rc-results .btn { width: 100%; justify-content: flex-start; flex-wrap: wrap; text-align: left; }
+.rc-ratings { margin: 8px 0 0; padding-left: 20px; }
+
+/* Import */
+.rc-preview-lines { list-style: none; margin: 0 0 12px; padding: 0; display: grid; gap: 4px; }
+.rc-preview-lines > li { padding: 8px 0; border-bottom: 1px solid var(--border); overflow-wrap: anywhere; }
+.rc-preview-lines .field { margin: 6px 0 0; }
+
+/* Dialog */
+.rc-modal-backdrop {
+  position: fixed; inset: 0; z-index: 50; overflow-y: auto; background: rgb(0 0 0 / 55%);
+  display: flex; align-items: flex-start; justify-content: center; padding: 12px;
+}
+.rc-modal {
+  width: 100%; max-width: 640px; margin: 4vh 0; background: var(--bg); color: var(--text); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: var(--gutter);
+}
+.rc-modal .crud-form { margin-bottom: 0; }
+.rc-modal .crud-form > .card { border: 0; box-shadow: none; padding: 0; background: transparent; margin-bottom: 0; }
+.rc-modal .crud-form h2 { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }

@@ -8,6 +8,7 @@ import argparse
 import sys
 from collections.abc import Callable, Sequence
 from datetime import date
+from pathlib import Path
 
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
@@ -16,6 +17,8 @@ from sqlalchemy.orm import Session, sessionmaker
 from app.auth import generate_token, hash_token
 from app.db import make_session_factory
 from app.models import Person
+from app.services import catalog
+from app.services import recipes as recipe_service
 
 
 class CliError(Exception):
@@ -85,11 +88,93 @@ def build_parser() -> argparse.ArgumentParser:
     rotate.add_argument("--name", required=True)
 
     sub.add_parser("list-persons", help="Personen auflisten (ohne Tokens)")
+
+    bls = sub.add_parser("import-bls", help="BLS-Nährwertdatei (XLSX oder ZIP) in den Katalog importieren")
+    bls.add_argument("path", type=Path, help="Pfad zur BLS-Datei (liegt nie im Repo)")
+
+    recipe = sub.add_parser("import-recipe", help="Rezept von einer URL importieren")
+    recipe.add_argument("url")
+
+    sub.add_parser("seed-synonyms", help="Start-Synonyme für Zutaten anlegen (idempotent)")
     return parser
 
 
+MAX_MISSING_SHOWN = 15
+
+
+def import_bls(session: Session, path: Path, out: Callable[[str], None] = print) -> dict[str, int]:
+    """BLS-Datei importieren, danach die Start-Synonyme anlegen. Gibt Fortschritt und Zusammenfassung aus."""
+    last_step = -1
+
+    def progress(fraction: float, message: str) -> None:
+        nonlocal last_step
+        step = int(fraction * 10)  # höchstens eine Zeile je 10 %
+        if step != last_step or fraction >= 1.0:
+            last_step = step
+            out(f"[{fraction * 100:3.0f} %] {message}")
+
+    try:
+        stats = catalog.import_bls_file(session, path, progress)
+    except FileNotFoundError as exc:
+        raise CliError(str(exc)) from exc
+    except (ValueError, OSError) as exc:
+        raise CliError(f"BLS-Datei konnte nicht gelesen werden: {exc}") from exc
+    out(
+        f"Zutaten: {stats['created']} neu, {stats['updated']} aktualisiert, "
+        f"{stats['unchanged']} unverändert, {stats['skipped']} übersprungen."
+    )
+    seed_synonyms(session, out)
+    return stats
+
+
+def seed_synonyms(session: Session, out: Callable[[str], None] = print) -> dict[str, object]:
+    result = catalog.ensure_seed_synonyms(session)
+    out(
+        f"Synonyme: {result['created']} angelegt, {result['skipped']} schon vorhanden, "
+        f"{result['not_found']} ohne Treffer im Katalog."
+    )
+    missing: list[str] = list(result["missing"])  # type: ignore[call-overload]
+    if missing:
+        out("Nicht gefundene Zielnamen (BLS-Datei passt evtl. nicht zur Version der Liste):")
+        for name in missing[:MAX_MISSING_SHOWN]:
+            out(f"  - {name}")
+        if len(missing) > MAX_MISSING_SHOWN:
+            out(f"  … und {len(missing) - MAX_MISSING_SHOWN} weitere")
+    return result
+
+
+def import_recipe(
+    session: Session, url: str, out: Callable[[str], None] = print
+) -> recipe_service.ImportResult:
+    """Rezept von einer URL importieren und speichern; gibt Titel, Zeilen, Zuordnung und Status aus."""
+    from app.importers import recipe_web  # erst bei Bedarf (lädt recipe-scrapers)
+
+    url = url.strip()
+    existing = recipe_service.find_by_url(session, url)
+    if existing is not None:
+        raise CliError(f"Dieses Rezept ist schon vorhanden (ID {existing.id}: {existing.title}).")
+    try:
+        imported = recipe_web.import_recipe_url(url)
+    except recipe_web.RecipeImportError as exc:
+        raise CliError(str(exc)) from exc
+    result = recipe_service.build_recipe_from_import(session, imported)
+    recipe = result.recipe
+    out(f"Rezept '{recipe.title}' gespeichert (ID {recipe.id}).")
+    out(
+        f"Zutatenzeilen: {result.line_count}, davon zugeordnet: {result.assigned_count}. "
+        f"Status: {recipe.status}."
+    )
+    for warning in result.warnings:
+        out(f"Hinweis: {warning}")
+    if recipe.status != "ready":
+        out("Offene Zeilen lassen sich in der Prüfliste (Oberfläche) zuordnen.")
+    return result
+
+
 def run(args: argparse.Namespace, session: Session, out: Callable[[str], None] = print) -> None:
-    if args.command == "create-person":
+    if args.command in ("import-bls", "import-recipe", "seed-synonyms"):
+        _run_catalog(args, session, out)
+    elif args.command == "create-person":
         person, token = create_person(
             session, name=args.name, sex=args.sex, birth_date=args.birth, height_cm=args.height_cm
         )
@@ -111,6 +196,18 @@ def run(args: argparse.Namespace, session: Session, out: Callable[[str], None] =
                 f"{'aktiv' if p.is_active else 'inaktiv'}\t"
                 f"Token: {'gesetzt' if p.token_hash else 'keins'}"
             )
+
+
+def _run_catalog(args: argparse.Namespace, session: Session, out: Callable[[str], None]) -> bool:
+    if args.command == "import-bls":
+        import_bls(session, args.path, out)
+    elif args.command == "import-recipe":
+        import_recipe(session, args.url, out)
+    elif args.command == "seed-synonyms":
+        seed_synonyms(session, out)
+    else:
+        return False
+    return True
 
 
 def main(argv: Sequence[str] | None = None, session_factory: sessionmaker[Session] | None = None) -> int:

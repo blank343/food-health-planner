@@ -139,3 +139,106 @@ class SafetyResult:
     target: DayTarget
     warnings: list[Warning]
     applied_rate_kg_per_week: float | None = None
+
+
+# ---------------------------------------------------------------------------
+# Phase 2: Zutaten und Nährwerte (siehe docs/PHASE2.md, Abschnitte 4 und 6)
+# ---------------------------------------------------------------------------
+
+
+@dataclass(frozen=True)
+class ParsedIngredient:
+    """Ergebnis von `calc.ingredients.parse_ingredient_line`."""
+
+    raw: str
+    name: str  # Rohname ohne Menge, Einheit und Zusatz, z. B. "Zwiebel"
+    quantity: float | None = None  # None bei "Salz und Pfeffer", "nach Geschmack"
+    quantity_max: float | None = None  # bei Bereichen "3-4": quantity=3, quantity_max=4
+    unit: str | None = None  # normalisiert (siehe defaults.UNIT_ALIASES); None = Stückzahl
+    note: str | None = None  # z. B. "fein gehackt", Text nach Doppelpunkt
+    optional: bool = False  # "optional", "nach Belieben", "evtl."
+
+
+@dataclass(frozen=True)
+class IngredientMatch:
+    ingredient_id: int
+    name: str
+    score: float  # 0–100
+    via: Literal["synonym", "exact", "fuzzy"]
+
+
+@dataclass(frozen=True)
+class Nutrients:
+    """Absolute Nährwerte (z. B. einer Zeile, einer Portion oder eines Rezepts)."""
+
+    kcal: float = 0.0
+    protein_g: float = 0.0
+    fat_g: float = 0.0
+    carb_g: float = 0.0
+    fiber_g: float = 0.0
+    salt_g: float = 0.0
+    micros: dict[str, float] = field(default_factory=dict)
+
+
+@dataclass(frozen=True)
+class NutrientsPer100:
+    """Nährwerte je 100 g einer Zutat. None = unbekannt (zählt nicht als 0)."""
+
+    kcal: float | None = None
+    protein_g: float | None = None
+    fat_g: float | None = None
+    carb_g: float | None = None
+    fiber_g: float | None = None
+    salt_g: float | None = None
+    micros: dict[str, float] = field(default_factory=dict)
+
+
+@dataclass(frozen=True)
+class LineNutrition:
+    """Eine Zutatenzeile für den Rechner: Menge in g und die zugeordnete Zutat."""
+
+    label: str
+    grams: float | None  # None = Menge unbekannt (Zeile zählt als "fehlend")
+    per100: NutrientsPer100 | None  # None = keine Zutat zugeordnet
+    optional: bool = False  # optionale Zeilen zählen nicht in die Summe und nicht als fehlend
+
+
+@dataclass(frozen=True)
+class RecipeNutrition:
+    total: Nutrients
+    per_serving: Nutrients
+    servings: float
+    total_weight_g: float
+    serving_weight_g: float
+    energy_density_kcal_per_100g: float | None
+    coverage: float  # Anteil der (nicht optionalen) Zeilen mit Menge und Werten, 0–1
+    missing: list[str] = field(default_factory=list)  # Labels der Zeilen ohne Werte
+
+
+@dataclass(frozen=True)
+class SatietyScore:
+    score: float  # 0–100, höher = sättigender
+    # Teilwerte 0–1: density, volume, protein, fiber, warm
+    parts: dict[str, float] = field(default_factory=dict)
+
+
+@dataclass(frozen=True)
+class SlotFit:
+    """Wie gut passt eine Portion in das Ziel einer Mahlzeit (siehe PHASE2.md, Abschnitt 6)."""
+
+    factor: float  # Portionsfaktor (nach Begrenzung)
+    unclamped_factor: float
+    grams: float  # Menge der skalierten Portion
+    scaled: Nutrients  # Nährwerte der skalierten Portion
+    deviation_pct: dict[str, float]  # kcal, protein, fat, carb: (Ist − Ziel) / Ziel × 100
+    fit_score: float  # 0–100
+    notes: list[str] = field(default_factory=list)  # deutsche Hinweise
+
+
+@dataclass(frozen=True)
+class ComponentChoice:
+    """Eine Baukasten-Komponente mit gewählter Menge."""
+
+    label: str
+    grams: float
+    per100: NutrientsPer100

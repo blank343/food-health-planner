@@ -81,3 +81,44 @@ class LabReport:
     patient_name: str | None = None
     birth_date: date | None = None
     results: list[LabResultRow] = field(default_factory=list)
+
+
+# ---------------------------------------------------------------------------
+# Phase 2: Zutaten- und Rezeptimport (siehe docs/PHASE2.md, Abschnitt 5)
+# ---------------------------------------------------------------------------
+
+
+@dataclass
+class IngredientRecord:
+    """Eine Zutat aus einer Nährwertquelle (BLS, später OFF). Nährwerte je 100 g."""
+
+    name: str
+    source: str  # "bls" | "off" | "manual"
+    source_code: str | None = None
+    category: str | None = None
+    kcal_100: float | None = None
+    protein_100: float | None = None
+    fat_100: float | None = None
+    carb_100: float | None = None
+    fiber_100: float | None = None
+    salt_100: float | None = None
+    micros: dict[str, float] = field(default_factory=dict)
+    is_fish: bool = False
+
+
+@dataclass
+class ImportedRecipe:
+    """Rohergebnis des Web-Imports, noch ohne Zuordnung der Zutaten."""
+
+    title: str
+    source_url: str
+    source_site: str | None = None
+    servings: float | None = None
+    prep_min: int | None = None
+    cook_min: int | None = None
+    instructions: str | None = None
+    image_url: str | None = None
+    ingredient_lines: list[str] = field(default_factory=list)
+    # kcal, protein_g, fat_g, carb_g, falls die Seite sie liefert (je Portion)
+    site_nutrients: dict[str, float] = field(default_factory=dict)
+    warnings: list[str] = field(default_factory=list)

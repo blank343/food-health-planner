@@ -89,6 +89,22 @@ Anmeldebildschirm der App ein.
 Danach in der App: Importe (Health Auto Export, Apple Health, Laborbefund), unter „Tagesziel“ das aktuelle Gewicht
 eintragen, unter „Einstellungen“ Ziele und Grenzen pflegen.
 
+## 5a. Nährwertdatenbank (BLS 4.0) einspielen (ab Phase 2)
+
+Für Rezepte braucht die App die Nährwertdatenbank BLS 4.0 (kostenlos, [blsdb.de](https://www.blsdb.de/)).
+Die ZIP-Datei (`BLS_4_0_2025_DE.zip`) bleibt außerhalb von Git. Einmalig in den API-Container kopieren und importieren
+(das dauert etwa eine Minute, der Import ist wiederholbar):
+
+```bash
+sudo docker cp BLS_4_0_2025_DE.zip <api-container>:/tmp/bls.zip
+sudo docker exec -it <api-container> python -m app.cli import-bls /tmp/bls.zip
+sudo docker exec -it <api-container> rm /tmp/bls.zip
+```
+
+Der Befehl legt auch die Start-Synonyme (z. B. „Eier“, „Möhre“, „Gemüsebrühe“) und Stückgewichte an. Danach lassen sich
+Rezepte in der App importieren (Seite „Rezepte“). Nicht erkannte Zutaten ordnest du einmal in „Zutaten prüfen“ zu, die
+App merkt sich das.
+
 ## 6. Zugriff über Tailscale (Katalog-App)
 
 Die App sollte **nicht** ins Internet oder ins normale LAN veröffentlicht werden.

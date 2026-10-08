@@ -2073,6 +2073,1859 @@
     ]
    }
   },
+  "/api/ingredients": {
+   "get": {
+    "tags": [
+     "Zutaten"
+    ],
+    "summary": "Zutaten suchen",
+    "operationId": "list_ingredients_api_ingredients_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "q",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "maxLength": 100
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "Suchtext (Teilstring und Ähnlichkeit)",
+       "title": "Q"
+      },
+      "description": "Suchtext (Teilstring und Ähnlichkeit)"
+     },
+     {
+      "name": "source",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "enum": [
+          "bls",
+          "off",
+          "manual"
+         ],
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "Nur Zutaten dieser Quelle",
+       "title": "Source"
+      },
+      "description": "Nur Zutaten dieser Quelle"
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 200,
+       "minimum": 1,
+       "default": 25,
+       "title": "Limit"
+      }
+     },
+     {
+      "name": "offset",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "minimum": 0,
+       "default": 0,
+       "title": "Offset"
+      }
+     },
+     {
+      "name": "include_hidden",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "boolean",
+       "description": "Ausgeblendete Zutaten mit anzeigen",
+       "default": false,
+       "title": "Include Hidden"
+      },
+      "description": "Ausgeblendete Zutaten mit anzeigen"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/IngredientListOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "post": {
+    "tags": [
+     "Zutaten"
+    ],
+    "summary": "Eigene Zutat anlegen",
+    "operationId": "create_ingredient_api_ingredients_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/IngredientIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/IngredientDetailOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/ingredients/{ingredient_id}": {
+   "get": {
+    "tags": [
+     "Zutaten"
+    ],
+    "summary": "Zutat mit Synonymen",
+    "operationId": "get_ingredient_api_ingredients__ingredient_id__get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ingredient_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ingredient Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/IngredientDetailOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "patch": {
+    "tags": [
+     "Zutaten"
+    ],
+    "summary": "Zutat ändern",
+    "operationId": "patch_ingredient_api_ingredients__ingredient_id__patch",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ingredient_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ingredient Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/IngredientPatch"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/IngredientDetailOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "tags": [
+     "Zutaten"
+    ],
+    "summary": "Eigene Zutat löschen",
+    "operationId": "delete_ingredient_api_ingredients__ingredient_id__delete",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ingredient_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ingredient Id"
+      }
+     }
+    ],
+    "responses": {
+     "204": {
+      "description": "Successful Response"
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/ingredients/{ingredient_id}/synonyms": {
+   "post": {
+    "tags": [
+     "Zutaten"
+    ],
+    "summary": "Synonym hinzufügen",
+    "operationId": "add_synonym_api_ingredients__ingredient_id__synonyms_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ingredient_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ingredient Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/SynonymIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/IngredientDetailOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/ingredients/{ingredient_id}/synonyms/{alias}": {
+   "delete": {
+    "tags": [
+     "Zutaten"
+    ],
+    "summary": "Synonym entfernen",
+    "operationId": "remove_synonym_api_ingredients__ingredient_id__synonyms__alias__delete",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ingredient_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ingredient Id"
+      }
+     },
+     {
+      "name": "alias",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Alias"
+      }
+     }
+    ],
+    "responses": {
+     "204": {
+      "description": "Successful Response"
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/recipes": {
+   "get": {
+    "tags": [
+     "Rezepte"
+    ],
+    "summary": "Rezepte auflisten (optional mit Passung)",
+    "operationId": "list_recipes_api_recipes_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "q",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "maxLength": 100
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "Suche im Titel",
+       "title": "Q"
+      },
+      "description": "Suche im Titel"
+     },
+     {
+      "name": "slot",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "enum": [
+          "breakfast",
+          "lunch",
+          "dinner",
+          "snack"
+         ],
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "Nur Rezepte, die für diesen Slot getaggt sind",
+       "title": "Slot"
+      },
+      "description": "Nur Rezepte, die für diesen Slot getaggt sind"
+     },
+     {
+      "name": "include_untagged",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "boolean",
+       "description": "Mit `slot`: auch Rezepte ohne Slot-Tag",
+       "default": false,
+       "title": "Include Untagged"
+      },
+      "description": "Mit `slot`: auch Rezepte ohne Slot-Tag"
+     },
+     {
+      "name": "favorite",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Favorite"
+      }
+     },
+     {
+      "name": "status",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "enum": [
+          "draft",
+          "ready",
+          "needs_review"
+         ],
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Status"
+      }
+     },
+     {
+      "name": "fit_slot",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "enum": [
+          "breakfast",
+          "lunch",
+          "dinner",
+          "snack"
+         ],
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "Passung für die angemeldete Person",
+       "title": "Fit Slot"
+      },
+      "description": "Passung für die angemeldete Person"
+     },
+     {
+      "name": "fit_date",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "Stichtag der Passung, Standard: heute",
+       "title": "Fit Date"
+      },
+      "description": "Stichtag der Passung, Standard: heute"
+     },
+     {
+      "name": "sort",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "enum": [
+        "title",
+        "newest",
+        "kcal",
+        "protein",
+        "satiety",
+        "rating",
+        "fit"
+       ],
+       "type": "string",
+       "default": "title",
+       "title": "Sort"
+      }
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 200,
+       "minimum": 1,
+       "default": 50,
+       "title": "Limit"
+      }
+     },
+     {
+      "name": "offset",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "minimum": 0,
+       "default": 0,
+       "title": "Offset"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/RecipeListOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "post": {
+    "tags": [
+     "Rezepte"
+    ],
+    "summary": "Rezept anlegen",
+    "operationId": "create_recipe_api_recipes_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/RecipeCreate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/RecipeDetailOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/recipes/import-preview": {
+   "post": {
+    "tags": [
+     "Rezepte"
+    ],
+    "summary": "Rezept-URL prüfen (nichts wird gespeichert)",
+    "operationId": "import_preview_api_recipes_import_preview_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/UrlIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ImportPreviewOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/api/recipes/import": {
+   "post": {
+    "tags": [
+     "Rezepte"
+    ],
+    "summary": "Rezept von einer URL importieren und speichern",
+    "operationId": "import_recipe_api_recipes_import_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/UrlIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/RecipeDetailOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/api/recipes/{recipe_id}": {
+   "get": {
+    "tags": [
+     "Rezepte"
+    ],
+    "summary": "Rezept mit Nährwerten",
+    "operationId": "get_recipe_api_recipes__recipe_id__get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "recipe_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Recipe Id"
+      }
+     },
+     {
+      "name": "fit_slot",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "enum": [
+          "breakfast",
+          "lunch",
+          "dinner",
+          "snack"
+         ],
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "Passung für die angemeldete Person",
+       "title": "Fit Slot"
+      },
+      "description": "Passung für die angemeldete Person"
+     },
+     {
+      "name": "fit_date",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "Stichtag der Passung, Standard: heute",
+       "title": "Fit Date"
+      },
+      "description": "Stichtag der Passung, Standard: heute"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/RecipeDetailOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "patch": {
+    "tags": [
+     "Rezepte"
+    ],
+    "summary": "Rezept ändern",
+    "operationId": "patch_recipe_api_recipes__recipe_id__patch",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "recipe_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Recipe Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/RecipePatch"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/RecipeDetailOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "tags": [
+     "Rezepte"
+    ],
+    "summary": "Rezept löschen",
+    "operationId": "delete_recipe_api_recipes__recipe_id__delete",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "recipe_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Recipe Id"
+      }
+     }
+    ],
+    "responses": {
+     "204": {
+      "description": "Successful Response"
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/recipes/{recipe_id}/fit": {
+   "get": {
+    "tags": [
+     "Rezepte"
+    ],
+    "summary": "Passt das Rezept ins Mahlzeitenziel der Person?",
+    "operationId": "recipe_fit_api_recipes__recipe_id__fit_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "recipe_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Recipe Id"
+      }
+     },
+     {
+      "name": "slot",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "enum": [
+        "breakfast",
+        "lunch",
+        "dinner",
+        "snack"
+       ],
+       "type": "string",
+       "description": "Mahlzeit",
+       "title": "Slot"
+      },
+      "description": "Mahlzeit"
+     },
+     {
+      "name": "date",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "Stichtag, Standard: heute",
+       "title": "Date"
+      },
+      "description": "Stichtag, Standard: heute"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/FitOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/recipes/{recipe_id}/rating": {
+   "put": {
+    "tags": [
+     "Rezepte"
+    ],
+    "summary": "Eigene Bewertung setzen",
+    "operationId": "put_rating_api_recipes__recipe_id__rating_put",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "recipe_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Recipe Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/RatingIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/MyRatingOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "tags": [
+     "Rezepte"
+    ],
+    "summary": "Eigene Bewertung entfernen",
+    "operationId": "delete_rating_api_recipes__recipe_id__rating_delete",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "recipe_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Recipe Id"
+      }
+     }
+    ],
+    "responses": {
+     "204": {
+      "description": "Successful Response"
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/recipe-lines/unassigned": {
+   "get": {
+    "tags": [
+     "Rezepte"
+    ],
+    "summary": "Zutatenzeilen ohne Zuordnung",
+    "operationId": "list_unassigned_api_recipe_lines_unassigned_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 200,
+       "minimum": 1,
+       "default": 50,
+       "title": "Limit"
+      }
+     },
+     {
+      "name": "offset",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "minimum": 0,
+       "default": 0,
+       "title": "Offset"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UnassignedListOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/recipe-lines/{line_id}/assign": {
+   "post": {
+    "tags": [
+     "Rezepte"
+    ],
+    "summary": "Zeile einer Zutat zuordnen",
+    "operationId": "assign_line_api_recipe_lines__line_id__assign_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "line_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Line Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/AssignIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/AssignOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/components": {
+   "get": {
+    "tags": [
+     "Komponenten (Frühstücks-Baukasten)"
+    ],
+    "summary": "Komponenten: Liste (mit Varianten und Nährwerten)",
+    "operationId": "list_components_api_components_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/ComponentOut"
+         },
+         "type": "array",
+         "title": "Response List Components Api Components Get"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   },
+   "post": {
+    "tags": [
+     "Komponenten (Frühstücks-Baukasten)"
+    ],
+    "summary": "Komponente anlegen",
+    "operationId": "create_component_api_components_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ComponentIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ComponentOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/api/components/seed-defaults": {
+   "post": {
+    "tags": [
+     "Komponenten (Frühstücks-Baukasten)"
+    ],
+    "summary": "Standard-Komponenten für das Frühstück anlegen (idempotent)",
+    "description": "Legt zu den im Zutaten-Katalog gefundenen Zutaten die Standard-Komponenten an. Nicht gefundene Namen stehen in `missing`. Vorhandene Komponenten gleichen Namens werden übersprungen.",
+    "operationId": "seed_defaults_api_components_seed_defaults_post",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SeedOut"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/api/components/meal": {
+   "post": {
+    "tags": [
+     "Komponenten (Frühstücks-Baukasten)"
+    ],
+    "summary": "Baukasten-Mahlzeit berechnen (Nährwerte, Sättigung, Passung ins Tagesziel)",
+    "description": "Mengen je Komponente als `grams` oder `units` (Stück × Gewicht je Einheit der Variante). Mit `slot` (und optional `date`) kommt die Passung ins Slot-Ziel der angemeldeten Person dazu, ohne Portionsskalierung.",
+    "operationId": "compute_meal_api_components_meal_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/MealIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/MealOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/api/components/{component_id}": {
+   "get": {
+    "tags": [
+     "Komponenten (Frühstücks-Baukasten)"
+    ],
+    "summary": "Komponente lesen",
+    "operationId": "get_component_api_components__component_id__get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "component_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Component Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ComponentOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "patch": {
+    "tags": [
+     "Komponenten (Frühstücks-Baukasten)"
+    ],
+    "summary": "Komponente ändern",
+    "operationId": "update_component_api_components__component_id__patch",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "component_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Component Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ComponentPatch"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ComponentOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "tags": [
+     "Komponenten (Frühstücks-Baukasten)"
+    ],
+    "summary": "Komponente löschen (409, falls noch verwendet)",
+    "operationId": "delete_component_api_components__component_id__delete",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "component_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Component Id"
+      }
+     }
+    ],
+    "responses": {
+     "204": {
+      "description": "Successful Response"
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/components/{component_id}/variants": {
+   "post": {
+    "tags": [
+     "Komponenten (Frühstücks-Baukasten)"
+    ],
+    "summary": "Variante anlegen",
+    "operationId": "create_variant_api_components__component_id__variants_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "component_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Component Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/VariantIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/VariantOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/components/{component_id}/variants/{variant_id}": {
+   "patch": {
+    "tags": [
+     "Komponenten (Frühstücks-Baukasten)"
+    ],
+    "summary": "Variante ändern",
+    "operationId": "update_variant_api_components__component_id__variants__variant_id__patch",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "component_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Component Id"
+      }
+     },
+     {
+      "name": "variant_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Variant Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/VariantPatch"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/VariantOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "tags": [
+     "Komponenten (Frühstücks-Baukasten)"
+    ],
+    "summary": "Variante löschen",
+    "operationId": "delete_variant_api_components__component_id__variants__variant_id__delete",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "component_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Component Id"
+      }
+     },
+     {
+      "name": "variant_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Variant Id"
+      }
+     }
+    ],
+    "responses": {
+     "204": {
+      "description": "Successful Response"
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/me/ingredient-preferences": {
+   "get": {
+    "tags": [
+     "Zutaten-Vorlieben"
+    ],
+    "summary": "Eigene Zutaten-Vorlieben (mit Zutatennamen)",
+    "operationId": "list_preferences_api_me_ingredient_preferences_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "level",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "enum": [
+          "like",
+          "dislike",
+          "never"
+         ],
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "Nur diese Stufe anzeigen",
+       "title": "Level"
+      },
+      "description": "Nur diese Stufe anzeigen"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/PreferenceOut"
+         },
+         "title": "Response List Preferences Api Me Ingredient Preferences Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/me/ingredient-preferences/{ingredient_id}": {
+   "put": {
+    "tags": [
+     "Zutaten-Vorlieben"
+    ],
+    "summary": "Vorliebe für eine Zutat setzen oder ändern",
+    "operationId": "set_preference_api_me_ingredient_preferences__ingredient_id__put",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ingredient_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ingredient Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PreferenceIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/PreferenceOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "tags": [
+     "Zutaten-Vorlieben"
+    ],
+    "summary": "Vorliebe für eine Zutat entfernen",
+    "operationId": "delete_preference_api_me_ingredient_preferences__ingredient_id__delete",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ingredient_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ingredient Id"
+      }
+     }
+    ],
+    "responses": {
+     "204": {
+      "description": "Successful Response"
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
   "/api/health": {
    "get": {
     "summary": "Health-Check",
@@ -2119,6 +3972,64 @@
  },
  "components": {
   "schemas": {
+   "AssignIn": {
+    "properties": {
+     "ingredient_id": {
+      "type": "integer",
+      "title": "Ingredient Id"
+     },
+     "save_synonym": {
+      "type": "boolean",
+      "title": "Save Synonym",
+      "default": true
+     }
+    },
+    "type": "object",
+    "required": [
+     "ingredient_id"
+    ],
+    "title": "AssignIn"
+   },
+   "AssignOut": {
+    "properties": {
+     "line": {
+      "$ref": "#/components/schemas/LineOut"
+     },
+     "assigned_line_ids": {
+      "items": {
+       "type": "integer"
+      },
+      "type": "array",
+      "title": "Assigned Line Ids"
+     },
+     "recipe_ids": {
+      "items": {
+       "type": "integer"
+      },
+      "type": "array",
+      "title": "Recipe Ids"
+     },
+     "synonym": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Synonym"
+     }
+    },
+    "type": "object",
+    "required": [
+     "line",
+     "assigned_line_ids",
+     "recipe_ids",
+     "synonym"
+    ],
+    "title": "AssignOut"
+   },
    "BodyOut": {
     "properties": {
      "weight_kg": {
@@ -2216,6 +4127,272 @@
      "file"
     ],
     "title": "Body_import_labs_api_me_imports_labs_post"
+   },
+   "ComponentIn": {
+    "properties": {
+     "name": {
+      "type": "string",
+      "maxLength": 120,
+      "minLength": 1,
+      "title": "Name"
+     },
+     "kind": {
+      "type": "string",
+      "enum": [
+       "protein",
+       "carb",
+       "dairy",
+       "fruit",
+       "veg",
+       "other"
+      ],
+      "title": "Kind"
+     },
+     "ingredient_id": {
+      "type": "integer",
+      "exclusiveMinimum": 0.0,
+      "title": "Ingredient Id"
+     },
+     "min_g": {
+      "type": "number",
+      "maximum": 10000.0,
+      "minimum": 0.0,
+      "title": "Min G",
+      "default": 0.0
+     },
+     "max_g": {
+      "type": "number",
+      "maximum": 10000.0,
+      "exclusiveMinimum": 0.0,
+      "title": "Max G",
+      "default": 500.0
+     },
+     "step_g": {
+      "type": "number",
+      "maximum": 10000.0,
+      "exclusiveMinimum": 0.0,
+      "title": "Step G",
+      "default": 10.0
+     },
+     "typical_g": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 10000.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Typical G"
+     },
+     "weekend_fixed": {
+      "type": "boolean",
+      "title": "Weekend Fixed",
+      "default": false
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "name",
+     "kind",
+     "ingredient_id"
+    ],
+    "title": "ComponentIn"
+   },
+   "ComponentOut": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "name": {
+      "type": "string",
+      "title": "Name"
+     },
+     "kind": {
+      "type": "string",
+      "title": "Kind"
+     },
+     "ingredient_id": {
+      "type": "integer",
+      "title": "Ingredient Id"
+     },
+     "ingredient_name": {
+      "type": "string",
+      "title": "Ingredient Name"
+     },
+     "min_g": {
+      "type": "number",
+      "title": "Min G"
+     },
+     "max_g": {
+      "type": "number",
+      "title": "Max G"
+     },
+     "step_g": {
+      "type": "number",
+      "title": "Step G"
+     },
+     "typical_g": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Typical G"
+     },
+     "weekend_fixed": {
+      "type": "boolean",
+      "title": "Weekend Fixed"
+     },
+     "per100": {
+      "$ref": "#/components/schemas/Per100Out"
+     },
+     "variants": {
+      "items": {
+       "$ref": "#/components/schemas/VariantOut"
+      },
+      "type": "array",
+      "title": "Variants"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "name",
+     "kind",
+     "ingredient_id",
+     "ingredient_name",
+     "min_g",
+     "max_g",
+     "step_g",
+     "typical_g",
+     "weekend_fixed",
+     "per100",
+     "variants"
+    ],
+    "title": "ComponentOut"
+   },
+   "ComponentPatch": {
+    "properties": {
+     "name": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 120,
+        "minLength": 1
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Name"
+     },
+     "kind": {
+      "anyOf": [
+       {
+        "type": "string",
+        "enum": [
+         "protein",
+         "carb",
+         "dairy",
+         "fruit",
+         "veg",
+         "other"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Kind"
+     },
+     "ingredient_id": {
+      "anyOf": [
+       {
+        "type": "integer",
+        "exclusiveMinimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ingredient Id"
+     },
+     "min_g": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 10000.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Min G"
+     },
+     "max_g": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 10000.0,
+        "exclusiveMinimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Max G"
+     },
+     "step_g": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 10000.0,
+        "exclusiveMinimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Step G"
+     },
+     "typical_g": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 10000.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Typical G"
+     },
+     "weekend_fixed": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Weekend Fixed"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "title": "ComponentPatch",
+    "description": "Nur gesendete Felder werden geändert; `typical_g: null` löscht die übliche Menge."
    },
    "DailyOut": {
     "properties": {
@@ -2443,6 +4620,77 @@
     "title": "EnergyOut",
     "description": "Mittel über die letzten 28 Tage mit vollständigen Gerätedaten (Ruhe und aktiv)."
    },
+   "FitOut": {
+    "properties": {
+     "slot": {
+      "type": "string",
+      "title": "Slot"
+     },
+     "date": {
+      "type": "string",
+      "format": "date",
+      "title": "Date"
+     },
+     "factor": {
+      "type": "number",
+      "title": "Factor"
+     },
+     "unclamped_factor": {
+      "type": "number",
+      "title": "Unclamped Factor"
+     },
+     "grams": {
+      "type": "number",
+      "title": "Grams"
+     },
+     "scaled": {
+      "$ref": "#/components/schemas/NutrientsOut"
+     },
+     "deviation_pct": {
+      "additionalProperties": {
+       "type": "number"
+      },
+      "type": "object",
+      "title": "Deviation Pct"
+     },
+     "fit_score": {
+      "type": "number",
+      "title": "Fit Score"
+     },
+     "notes": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Notes"
+     },
+     "slot_target": {
+      "$ref": "#/components/schemas/MacroOut"
+     },
+     "warnings": {
+      "items": {
+       "$ref": "#/components/schemas/WarningOut"
+      },
+      "type": "array",
+      "title": "Warnings"
+     }
+    },
+    "type": "object",
+    "required": [
+     "slot",
+     "date",
+     "factor",
+     "unclamped_factor",
+     "grams",
+     "scaled",
+     "deviation_pct",
+     "fit_score",
+     "notes",
+     "slot_target",
+     "warnings"
+    ],
+    "title": "FitOut"
+   },
    "GoalIn": {
     "properties": {
      "kind": {
@@ -2661,6 +4909,731 @@
     ],
     "title": "ImportJobOut",
     "description": "Stand eines Import-Jobs."
+   },
+   "ImportPreviewOut": {
+    "properties": {
+     "title": {
+      "type": "string",
+      "title": "Title"
+     },
+     "source_url": {
+      "type": "string",
+      "title": "Source Url"
+     },
+     "source_site": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Source Site"
+     },
+     "servings": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Servings"
+     },
+     "prep_min": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Prep Min"
+     },
+     "cook_min": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Cook Min"
+     },
+     "instructions": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Instructions"
+     },
+     "image_url": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Image Url"
+     },
+     "site_nutrients": {
+      "additionalProperties": {
+       "type": "number"
+      },
+      "type": "object",
+      "title": "Site Nutrients"
+     },
+     "warnings": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Warnings"
+     },
+     "lines": {
+      "items": {
+       "$ref": "#/components/schemas/PreviewLineOut"
+      },
+      "type": "array",
+      "title": "Lines"
+     }
+    },
+    "type": "object",
+    "required": [
+     "title",
+     "source_url",
+     "source_site",
+     "servings",
+     "prep_min",
+     "cook_min",
+     "instructions",
+     "image_url",
+     "site_nutrients",
+     "warnings",
+     "lines"
+    ],
+    "title": "ImportPreviewOut"
+   },
+   "IngredientDetailOut": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "name": {
+      "type": "string",
+      "title": "Name"
+     },
+     "category": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Category"
+     },
+     "source": {
+      "type": "string",
+      "title": "Source"
+     },
+     "source_code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Source Code"
+     },
+     "nutrients": {
+      "$ref": "#/components/schemas/NutrientsPer100Out"
+     },
+     "density_g_per_ml": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Density G Per Ml"
+     },
+     "piece_g": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Piece G"
+     },
+     "is_fish": {
+      "type": "boolean",
+      "title": "Is Fish"
+     },
+     "is_potassium_salt": {
+      "type": "boolean",
+      "title": "Is Potassium Salt"
+     },
+     "shelf_days": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Shelf Days"
+     },
+     "hidden": {
+      "type": "boolean",
+      "title": "Hidden"
+     },
+     "synonyms": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Synonyms"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "name",
+     "category",
+     "source",
+     "source_code",
+     "nutrients",
+     "density_g_per_ml",
+     "piece_g",
+     "is_fish",
+     "is_potassium_salt",
+     "shelf_days",
+     "hidden",
+     "synonyms"
+    ],
+    "title": "IngredientDetailOut"
+   },
+   "IngredientIn": {
+    "properties": {
+     "name": {
+      "type": "string",
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Name"
+     },
+     "category": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 60
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Category"
+     },
+     "kcal_100": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 900.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Kcal 100"
+     },
+     "protein_100": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 100.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Protein 100"
+     },
+     "fat_100": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 100.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Fat 100"
+     },
+     "carb_100": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 100.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Carb 100"
+     },
+     "fiber_100": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 100.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Fiber 100"
+     },
+     "salt_100": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 100.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Salt 100",
+      "description": "Salz in g je 100 g"
+     },
+     "micros": {
+      "additionalProperties": {
+       "type": "number"
+      },
+      "type": "object",
+      "title": "Micros",
+      "description": "Schlüssel wie `zinc_mg`, je 100 g"
+     },
+     "density_g_per_ml": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 20.0,
+        "exclusiveMinimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Density G Per Ml"
+     },
+     "piece_g": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 5000.0,
+        "exclusiveMinimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Piece G",
+      "description": "Gewicht eines Stücks in g"
+     },
+     "is_fish": {
+      "type": "boolean",
+      "title": "Is Fish",
+      "default": false
+     },
+     "is_potassium_salt": {
+      "type": "boolean",
+      "title": "Is Potassium Salt",
+      "default": false
+     },
+     "shelf_days": {
+      "anyOf": [
+       {
+        "type": "integer",
+        "maximum": 3650.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Shelf Days"
+     },
+     "hidden": {
+      "type": "boolean",
+      "title": "Hidden",
+      "default": false
+     }
+    },
+    "type": "object",
+    "required": [
+     "name"
+    ],
+    "title": "IngredientIn",
+    "description": "Eine manuell gepflegte Zutat (Werte je 100 g)."
+   },
+   "IngredientListOut": {
+    "properties": {
+     "items": {
+      "items": {
+       "$ref": "#/components/schemas/IngredientOut"
+      },
+      "type": "array",
+      "title": "Items"
+     },
+     "total": {
+      "type": "integer",
+      "title": "Total"
+     },
+     "limit": {
+      "type": "integer",
+      "title": "Limit"
+     },
+     "offset": {
+      "type": "integer",
+      "title": "Offset"
+     }
+    },
+    "type": "object",
+    "required": [
+     "items",
+     "total",
+     "limit",
+     "offset"
+    ],
+    "title": "IngredientListOut"
+   },
+   "IngredientOut": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "name": {
+      "type": "string",
+      "title": "Name"
+     },
+     "category": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Category"
+     },
+     "source": {
+      "type": "string",
+      "title": "Source"
+     },
+     "source_code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Source Code"
+     },
+     "nutrients": {
+      "$ref": "#/components/schemas/NutrientsPer100Out"
+     },
+     "density_g_per_ml": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Density G Per Ml"
+     },
+     "piece_g": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Piece G"
+     },
+     "is_fish": {
+      "type": "boolean",
+      "title": "Is Fish"
+     },
+     "is_potassium_salt": {
+      "type": "boolean",
+      "title": "Is Potassium Salt"
+     },
+     "shelf_days": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Shelf Days"
+     },
+     "hidden": {
+      "type": "boolean",
+      "title": "Hidden"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "name",
+     "category",
+     "source",
+     "source_code",
+     "nutrients",
+     "density_g_per_ml",
+     "piece_g",
+     "is_fish",
+     "is_potassium_salt",
+     "shelf_days",
+     "hidden"
+    ],
+    "title": "IngredientOut"
+   },
+   "IngredientPatch": {
+    "properties": {
+     "name": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Name"
+     },
+     "category": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Category"
+     },
+     "kcal_100": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Kcal 100"
+     },
+     "protein_100": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Protein 100"
+     },
+     "fat_100": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Fat 100"
+     },
+     "carb_100": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Carb 100"
+     },
+     "fiber_100": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Fiber 100"
+     },
+     "salt_100": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Salt 100"
+     },
+     "micros": {
+      "anyOf": [
+       {
+        "additionalProperties": {
+         "type": "number"
+        },
+        "type": "object"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Micros"
+     },
+     "density_g_per_ml": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Density G Per Ml"
+     },
+     "piece_g": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Piece G"
+     },
+     "is_fish": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Is Fish"
+     },
+     "is_potassium_salt": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Is Potassium Salt"
+     },
+     "shelf_days": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Shelf Days"
+     },
+     "hidden": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Hidden"
+     }
+    },
+    "type": "object",
+    "title": "IngredientPatch",
+    "description": "Teiländerung; nur gesendete Felder gelten."
+   },
+   "IngredientRefOut": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "name": {
+      "type": "string",
+      "title": "Name"
+     },
+     "source": {
+      "type": "string",
+      "title": "Source"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "name",
+     "source"
+    ],
+    "title": "IngredientRefOut"
    },
    "LabReportOut": {
     "properties": {
@@ -3405,6 +6378,158 @@
     "title": "LatestLabValueOut",
     "description": "Jüngster vorhandener Wert eines Analyten über alle Berichte."
    },
+   "LineIn": {
+    "properties": {
+     "id": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Id",
+      "description": "Vorhandene Zeile behalten (Zuordnung bleibt)"
+     },
+     "raw_text": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 400
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Raw Text"
+     },
+     "ingredient_id": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ingredient Id"
+     },
+     "grams": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 100000.0,
+        "exclusiveMinimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Grams"
+     },
+     "optional": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Optional"
+     }
+    },
+    "type": "object",
+    "title": "LineIn",
+    "description": "Eine Zutatenzeile: Freitext (`raw_text`) oder feste Zutat mit Gramm (`ingredient_id` + `grams`)."
+   },
+   "LineOut": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "position": {
+      "type": "integer",
+      "title": "Position"
+     },
+     "raw_text": {
+      "type": "string",
+      "title": "Raw Text"
+     },
+     "quantity": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Quantity"
+     },
+     "unit": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Unit"
+     },
+     "grams": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Grams"
+     },
+     "optional": {
+      "type": "boolean",
+      "title": "Optional"
+     },
+     "ingredient": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/IngredientRefOut"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "nutrients": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/NutrientsOut"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "position",
+     "raw_text",
+     "quantity",
+     "unit",
+     "grams",
+     "optional",
+     "ingredient",
+     "nutrients"
+    ],
+    "title": "LineOut"
+   },
    "MacroOut": {
     "properties": {
      "kcal": {
@@ -3540,6 +6665,359 @@
      "lean_mass_kg"
     ],
     "title": "ManualMeasurementOut"
+   },
+   "MatchOut": {
+    "properties": {
+     "ingredient_id": {
+      "type": "integer",
+      "title": "Ingredient Id"
+     },
+     "name": {
+      "type": "string",
+      "title": "Name"
+     },
+     "score": {
+      "type": "number",
+      "title": "Score"
+     },
+     "via": {
+      "type": "string",
+      "title": "Via"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ingredient_id",
+     "name",
+     "score",
+     "via"
+    ],
+    "title": "MatchOut"
+   },
+   "MealFitOut": {
+    "properties": {
+     "slot": {
+      "type": "string",
+      "title": "Slot"
+     },
+     "date": {
+      "type": "string",
+      "format": "date",
+      "title": "Date"
+     },
+     "target": {
+      "$ref": "#/components/schemas/MacroOut"
+     },
+     "deviation_pct": {
+      "additionalProperties": {
+       "type": "number"
+      },
+      "type": "object",
+      "title": "Deviation Pct"
+     },
+     "fit_score": {
+      "type": "number",
+      "title": "Fit Score"
+     },
+     "notes": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Notes"
+     },
+     "warnings": {
+      "items": {
+       "$ref": "#/components/schemas/WarningOut"
+      },
+      "type": "array",
+      "title": "Warnings"
+     }
+    },
+    "type": "object",
+    "required": [
+     "slot",
+     "date",
+     "target",
+     "deviation_pct",
+     "fit_score",
+     "notes",
+     "warnings"
+    ],
+    "title": "MealFitOut"
+   },
+   "MealIn": {
+    "properties": {
+     "items": {
+      "items": {
+       "$ref": "#/components/schemas/MealItemIn"
+      },
+      "type": "array",
+      "maxItems": 50,
+      "minItems": 1,
+      "title": "Items"
+     },
+     "date": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Date",
+      "description": "Stichtag für die Passung, Standard: heute"
+     },
+     "slot": {
+      "anyOf": [
+       {
+        "type": "string",
+        "enum": [
+         "breakfast",
+         "lunch",
+         "dinner",
+         "snack"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Slot",
+      "description": "Slot für die Passung ins Tagesziel"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "items"
+    ],
+    "title": "MealIn"
+   },
+   "MealItemIn": {
+    "properties": {
+     "component_id": {
+      "type": "integer",
+      "exclusiveMinimum": 0.0,
+      "title": "Component Id"
+     },
+     "variant_id": {
+      "anyOf": [
+       {
+        "type": "integer",
+        "exclusiveMinimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Variant Id"
+     },
+     "grams": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 10000.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Grams"
+     },
+     "units": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 1000.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Units",
+      "description": "Stück × Gewicht je Einheit"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "component_id"
+    ],
+    "title": "MealItemIn"
+   },
+   "MealLineOut": {
+    "properties": {
+     "component_id": {
+      "type": "integer",
+      "title": "Component Id"
+     },
+     "component_name": {
+      "type": "string",
+      "title": "Component Name"
+     },
+     "variant_id": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Variant Id"
+     },
+     "variant_name": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Variant Name"
+     },
+     "ingredient_id": {
+      "type": "integer",
+      "title": "Ingredient Id"
+     },
+     "ingredient_name": {
+      "type": "string",
+      "title": "Ingredient Name"
+     },
+     "grams": {
+      "type": "number",
+      "title": "Grams"
+     },
+     "units": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Units"
+     },
+     "nutrients": {
+      "$ref": "#/components/schemas/NutrientsOut"
+     }
+    },
+    "type": "object",
+    "required": [
+     "component_id",
+     "component_name",
+     "variant_id",
+     "variant_name",
+     "ingredient_id",
+     "ingredient_name",
+     "grams",
+     "units",
+     "nutrients"
+    ],
+    "title": "MealLineOut"
+   },
+   "MealOut": {
+    "properties": {
+     "total": {
+      "$ref": "#/components/schemas/NutrientsOut"
+     },
+     "weight_g": {
+      "type": "number",
+      "title": "Weight G"
+     },
+     "energy_density_kcal_per_100g": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Energy Density Kcal Per 100G"
+     },
+     "satiety": {
+      "$ref": "#/components/schemas/SatietyOut"
+     },
+     "coverage": {
+      "type": "number",
+      "title": "Coverage"
+     },
+     "missing": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Missing"
+     },
+     "lines": {
+      "items": {
+       "$ref": "#/components/schemas/MealLineOut"
+      },
+      "type": "array",
+      "title": "Lines"
+     },
+     "notes": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Notes"
+     },
+     "fit": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/MealFitOut"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     }
+    },
+    "type": "object",
+    "required": [
+     "total",
+     "weight_g",
+     "energy_density_kcal_per_100g",
+     "satiety",
+     "coverage",
+     "missing",
+     "lines",
+     "notes",
+     "fit"
+    ],
+    "title": "MealOut"
+   },
+   "MyRatingOut": {
+    "properties": {
+     "recipe_id": {
+      "type": "integer",
+      "title": "Recipe Id"
+     },
+     "person_id": {
+      "type": "integer",
+      "title": "Person Id"
+     },
+     "rating": {
+      "type": "integer",
+      "title": "Rating"
+     }
+    },
+    "type": "object",
+    "required": [
+     "recipe_id",
+     "person_id",
+     "rating"
+    ],
+    "title": "MyRatingOut"
    },
    "NutrientRuleIn": {
     "properties": {
@@ -3898,6 +7376,229 @@
     ],
     "title": "NutrientRuleOut"
    },
+   "NutrientsOut": {
+    "properties": {
+     "kcal": {
+      "type": "number",
+      "title": "Kcal"
+     },
+     "protein_g": {
+      "type": "number",
+      "title": "Protein G"
+     },
+     "fat_g": {
+      "type": "number",
+      "title": "Fat G"
+     },
+     "carb_g": {
+      "type": "number",
+      "title": "Carb G"
+     },
+     "fiber_g": {
+      "type": "number",
+      "title": "Fiber G"
+     },
+     "salt_g": {
+      "type": "number",
+      "title": "Salt G"
+     },
+     "micros": {
+      "additionalProperties": {
+       "type": "number"
+      },
+      "type": "object",
+      "title": "Micros"
+     }
+    },
+    "type": "object",
+    "required": [
+     "kcal",
+     "protein_g",
+     "fat_g",
+     "carb_g",
+     "fiber_g",
+     "salt_g",
+     "micros"
+    ],
+    "title": "NutrientsOut"
+   },
+   "NutrientsPer100Out": {
+    "properties": {
+     "kcal": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Kcal"
+     },
+     "protein_g": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Protein G"
+     },
+     "fat_g": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Fat G"
+     },
+     "carb_g": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Carb G"
+     },
+     "fiber_g": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Fiber G"
+     },
+     "salt_g": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Salt G"
+     },
+     "micros": {
+      "additionalProperties": {
+       "type": "number"
+      },
+      "type": "object",
+      "title": "Micros"
+     }
+    },
+    "type": "object",
+    "required": [
+     "kcal",
+     "protein_g",
+     "fat_g",
+     "carb_g",
+     "fiber_g",
+     "salt_g",
+     "micros"
+    ],
+    "title": "NutrientsPer100Out"
+   },
+   "Per100Out": {
+    "properties": {
+     "kcal": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Kcal"
+     },
+     "protein_g": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Protein G"
+     },
+     "fat_g": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Fat G"
+     },
+     "carb_g": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Carb G"
+     },
+     "fiber_g": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Fiber G"
+     },
+     "salt_g": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Salt G"
+     },
+     "micros": {
+      "additionalProperties": {
+       "type": "number"
+      },
+      "type": "object",
+      "title": "Micros"
+     }
+    },
+    "type": "object",
+    "required": [
+     "kcal",
+     "protein_g",
+     "fat_g",
+     "carb_g",
+     "fiber_g",
+     "salt_g",
+     "micros"
+    ],
+    "title": "Per100Out",
+    "description": "Nährwerte der Zutat je 100 g (None = unbekannt)."
+   },
    "PersonOut": {
     "properties": {
      "id": {
@@ -4152,6 +7853,994 @@
     "type": "object",
     "title": "PersonSettings",
     "description": "Alle einstellbaren Werte einer Person. Fehlende Felder = sichere Standardwerte."
+   },
+   "PreferenceIn": {
+    "properties": {
+     "level": {
+      "type": "string",
+      "enum": [
+       "like",
+       "dislike",
+       "never"
+      ],
+      "title": "Level"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "level"
+    ],
+    "title": "PreferenceIn"
+   },
+   "PreferenceOut": {
+    "properties": {
+     "ingredient_id": {
+      "type": "integer",
+      "title": "Ingredient Id"
+     },
+     "ingredient_name": {
+      "type": "string",
+      "title": "Ingredient Name"
+     },
+     "level": {
+      "type": "string",
+      "title": "Level"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ingredient_id",
+     "ingredient_name",
+     "level"
+    ],
+    "title": "PreferenceOut"
+   },
+   "PreviewLineOut": {
+    "properties": {
+     "raw_text": {
+      "type": "string",
+      "title": "Raw Text"
+     },
+     "name": {
+      "type": "string",
+      "title": "Name"
+     },
+     "quantity": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Quantity"
+     },
+     "unit": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Unit"
+     },
+     "note": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Note"
+     },
+     "optional": {
+      "type": "boolean",
+      "title": "Optional"
+     },
+     "grams": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Grams"
+     },
+     "ingredient_id": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ingredient Id"
+     },
+     "ingredient_name": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ingredient Name"
+     },
+     "matches": {
+      "items": {
+       "$ref": "#/components/schemas/MatchOut"
+      },
+      "type": "array",
+      "title": "Matches"
+     }
+    },
+    "type": "object",
+    "required": [
+     "raw_text",
+     "name",
+     "quantity",
+     "unit",
+     "note",
+     "optional",
+     "grams",
+     "ingredient_id",
+     "ingredient_name",
+     "matches"
+    ],
+    "title": "PreviewLineOut"
+   },
+   "RatingIn": {
+    "properties": {
+     "rating": {
+      "type": "integer",
+      "maximum": 5.0,
+      "minimum": 1.0,
+      "title": "Rating"
+     }
+    },
+    "type": "object",
+    "required": [
+     "rating"
+    ],
+    "title": "RatingIn"
+   },
+   "RatingOut": {
+    "properties": {
+     "person_id": {
+      "type": "integer",
+      "title": "Person Id"
+     },
+     "person_name": {
+      "type": "string",
+      "title": "Person Name"
+     },
+     "rating": {
+      "type": "integer",
+      "title": "Rating"
+     }
+    },
+    "type": "object",
+    "required": [
+     "person_id",
+     "person_name",
+     "rating"
+    ],
+    "title": "RatingOut"
+   },
+   "RecipeCardOut": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "title": {
+      "type": "string",
+      "title": "Title"
+     },
+     "image_url": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Image Url"
+     },
+     "source_site": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Source Site"
+     },
+     "favorite": {
+      "type": "boolean",
+      "title": "Favorite"
+     },
+     "status": {
+      "type": "string",
+      "title": "Status"
+     },
+     "servings": {
+      "type": "number",
+      "title": "Servings"
+     },
+     "prep_min": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Prep Min"
+     },
+     "cook_min": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Cook Min"
+     },
+     "tag": {
+      "$ref": "#/components/schemas/TagOut"
+     },
+     "kcal": {
+      "type": "number",
+      "title": "Kcal"
+     },
+     "protein_g": {
+      "type": "number",
+      "title": "Protein G"
+     },
+     "fat_g": {
+      "type": "number",
+      "title": "Fat G"
+     },
+     "carb_g": {
+      "type": "number",
+      "title": "Carb G"
+     },
+     "serving_weight_g": {
+      "type": "number",
+      "title": "Serving Weight G"
+     },
+     "satiety_score": {
+      "type": "number",
+      "title": "Satiety Score"
+     },
+     "coverage": {
+      "type": "number",
+      "title": "Coverage"
+     },
+     "my_rating": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "My Rating"
+     },
+     "avg_rating": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Avg Rating"
+     },
+     "fit_score": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Fit Score"
+     },
+     "fit_factor": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Fit Factor"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "title",
+     "image_url",
+     "source_site",
+     "favorite",
+     "status",
+     "servings",
+     "prep_min",
+     "cook_min",
+     "tag",
+     "kcal",
+     "protein_g",
+     "fat_g",
+     "carb_g",
+     "serving_weight_g",
+     "satiety_score",
+     "coverage",
+     "my_rating",
+     "avg_rating"
+    ],
+    "title": "RecipeCardOut"
+   },
+   "RecipeCreate": {
+    "properties": {
+     "title": {
+      "type": "string",
+      "maxLength": 300,
+      "minLength": 1,
+      "title": "Title"
+     },
+     "servings": {
+      "type": "number",
+      "maximum": 100.0,
+      "exclusiveMinimum": 0.0,
+      "title": "Servings",
+      "default": 1.0
+     },
+     "prep_min": {
+      "anyOf": [
+       {
+        "type": "integer",
+        "maximum": 10000.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Prep Min"
+     },
+     "cook_min": {
+      "anyOf": [
+       {
+        "type": "integer",
+        "maximum": 10000.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Cook Min"
+     },
+     "instructions": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 20000
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Instructions"
+     },
+     "image_url": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 600
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Image Url"
+     },
+     "source_url": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 600
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Source Url"
+     },
+     "favorite": {
+      "type": "boolean",
+      "title": "Favorite",
+      "default": false
+     },
+     "notes": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 5000
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Notes"
+     },
+     "tag": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/TagIn"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "lines": {
+      "items": {
+       "$ref": "#/components/schemas/LineIn"
+      },
+      "type": "array",
+      "maxItems": 100,
+      "title": "Lines"
+     }
+    },
+    "type": "object",
+    "required": [
+     "title"
+    ],
+    "title": "RecipeCreate"
+   },
+   "RecipeDetailOut": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "title": {
+      "type": "string",
+      "title": "Title"
+     },
+     "image_url": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Image Url"
+     },
+     "source_site": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Source Site"
+     },
+     "favorite": {
+      "type": "boolean",
+      "title": "Favorite"
+     },
+     "status": {
+      "type": "string",
+      "title": "Status"
+     },
+     "servings": {
+      "type": "number",
+      "title": "Servings"
+     },
+     "prep_min": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Prep Min"
+     },
+     "cook_min": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Cook Min"
+     },
+     "tag": {
+      "$ref": "#/components/schemas/TagOut"
+     },
+     "kcal": {
+      "type": "number",
+      "title": "Kcal"
+     },
+     "protein_g": {
+      "type": "number",
+      "title": "Protein G"
+     },
+     "fat_g": {
+      "type": "number",
+      "title": "Fat G"
+     },
+     "carb_g": {
+      "type": "number",
+      "title": "Carb G"
+     },
+     "serving_weight_g": {
+      "type": "number",
+      "title": "Serving Weight G"
+     },
+     "satiety_score": {
+      "type": "number",
+      "title": "Satiety Score"
+     },
+     "coverage": {
+      "type": "number",
+      "title": "Coverage"
+     },
+     "my_rating": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "My Rating"
+     },
+     "avg_rating": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Avg Rating"
+     },
+     "fit_score": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Fit Score"
+     },
+     "fit_factor": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Fit Factor"
+     },
+     "source_url": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Source Url"
+     },
+     "instructions": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Instructions"
+     },
+     "notes": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Notes"
+     },
+     "lines": {
+      "items": {
+       "$ref": "#/components/schemas/LineOut"
+      },
+      "type": "array",
+      "title": "Lines"
+     },
+     "total": {
+      "$ref": "#/components/schemas/NutrientsOut"
+     },
+     "per_serving": {
+      "$ref": "#/components/schemas/NutrientsOut"
+     },
+     "total_weight_g": {
+      "type": "number",
+      "title": "Total Weight G"
+     },
+     "energy_density_kcal_per_100g": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Energy Density Kcal Per 100G"
+     },
+     "missing": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Missing"
+     },
+     "satiety": {
+      "$ref": "#/components/schemas/SatietyOut"
+     },
+     "ratings": {
+      "items": {
+       "$ref": "#/components/schemas/RatingOut"
+      },
+      "type": "array",
+      "title": "Ratings"
+     },
+     "fit": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/FitOut"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "warnings": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Warnings"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "title",
+     "image_url",
+     "source_site",
+     "favorite",
+     "status",
+     "servings",
+     "prep_min",
+     "cook_min",
+     "tag",
+     "kcal",
+     "protein_g",
+     "fat_g",
+     "carb_g",
+     "serving_weight_g",
+     "satiety_score",
+     "coverage",
+     "my_rating",
+     "avg_rating",
+     "source_url",
+     "instructions",
+     "notes",
+     "lines",
+     "total",
+     "per_serving",
+     "total_weight_g",
+     "energy_density_kcal_per_100g",
+     "missing",
+     "satiety",
+     "ratings"
+    ],
+    "title": "RecipeDetailOut"
+   },
+   "RecipeListOut": {
+    "properties": {
+     "items": {
+      "items": {
+       "$ref": "#/components/schemas/RecipeCardOut"
+      },
+      "type": "array",
+      "title": "Items"
+     },
+     "total": {
+      "type": "integer",
+      "title": "Total"
+     },
+     "limit": {
+      "type": "integer",
+      "title": "Limit"
+     },
+     "offset": {
+      "type": "integer",
+      "title": "Offset"
+     }
+    },
+    "type": "object",
+    "required": [
+     "items",
+     "total",
+     "limit",
+     "offset"
+    ],
+    "title": "RecipeListOut"
+   },
+   "RecipePatch": {
+    "properties": {
+     "title": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 300,
+        "minLength": 1
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Title"
+     },
+     "servings": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 100.0,
+        "exclusiveMinimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Servings"
+     },
+     "prep_min": {
+      "anyOf": [
+       {
+        "type": "integer",
+        "maximum": 10000.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Prep Min"
+     },
+     "cook_min": {
+      "anyOf": [
+       {
+        "type": "integer",
+        "maximum": 10000.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Cook Min"
+     },
+     "instructions": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 20000
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Instructions"
+     },
+     "image_url": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 600
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Image Url"
+     },
+     "source_url": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 600
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Source Url"
+     },
+     "favorite": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Favorite"
+     },
+     "notes": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 5000
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Notes"
+     },
+     "tag": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/TagIn"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "lines": {
+      "anyOf": [
+       {
+        "items": {
+         "$ref": "#/components/schemas/LineIn"
+        },
+        "type": "array",
+        "maxItems": 100
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Lines"
+     }
+    },
+    "type": "object",
+    "title": "RecipePatch",
+    "description": "Teiländerung; nur gesendete Felder gelten. `lines` ersetzt alle Zeilen (mit `id` = behalten)."
+   },
+   "SatietyOut": {
+    "properties": {
+     "score": {
+      "type": "number",
+      "title": "Score"
+     },
+     "parts": {
+      "additionalProperties": {
+       "type": "number"
+      },
+      "type": "object",
+      "title": "Parts"
+     }
+    },
+    "type": "object",
+    "required": [
+     "score",
+     "parts"
+    ],
+    "title": "SatietyOut"
+   },
+   "SeedOut": {
+    "properties": {
+     "created": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Created"
+     },
+     "skipped": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Skipped"
+     },
+     "missing": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Missing"
+     },
+     "variants_created": {
+      "type": "integer",
+      "title": "Variants Created"
+     },
+     "missing_variants": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Missing Variants"
+     },
+     "matched": {
+      "additionalProperties": {
+       "type": "string"
+      },
+      "type": "object",
+      "title": "Matched"
+     }
+    },
+    "type": "object",
+    "required": [
+     "created",
+     "skipped",
+     "missing",
+     "variants_created",
+     "missing_variants",
+     "matched"
+    ],
+    "title": "SeedOut"
    },
    "SettingsIn": {
     "properties": {
@@ -4617,6 +9306,184 @@
     ],
     "title": "SupplementOut"
    },
+   "SynonymIn": {
+    "properties": {
+     "alias": {
+      "type": "string",
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Alias"
+     }
+    },
+    "type": "object",
+    "required": [
+     "alias"
+    ],
+    "title": "SynonymIn"
+   },
+   "TagIn": {
+    "properties": {
+     "slot_types": {
+      "items": {
+       "type": "string",
+       "enum": [
+        "breakfast",
+        "lunch",
+        "dinner",
+        "snack"
+       ]
+      },
+      "type": "array",
+      "maxItems": 4,
+      "title": "Slot Types"
+     },
+     "cuisine": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 60
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Cuisine"
+     },
+     "main_ingredient": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 80
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Main Ingredient"
+     },
+     "batch_cookable": {
+      "type": "boolean",
+      "title": "Batch Cookable",
+      "default": false
+     },
+     "transportable": {
+      "type": "boolean",
+      "title": "Transportable",
+      "default": false
+     },
+     "warm": {
+      "type": "boolean",
+      "title": "Warm",
+      "default": false
+     },
+     "shelf_days": {
+      "anyOf": [
+       {
+        "type": "integer",
+        "maximum": 3650.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Shelf Days"
+     },
+     "season": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 20
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Season"
+     }
+    },
+    "type": "object",
+    "title": "TagIn"
+   },
+   "TagOut": {
+    "properties": {
+     "slot_types": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Slot Types"
+     },
+     "cuisine": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Cuisine"
+     },
+     "main_ingredient": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Main Ingredient"
+     },
+     "batch_cookable": {
+      "type": "boolean",
+      "title": "Batch Cookable"
+     },
+     "transportable": {
+      "type": "boolean",
+      "title": "Transportable"
+     },
+     "warm": {
+      "type": "boolean",
+      "title": "Warm"
+     },
+     "shelf_days": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Shelf Days"
+     },
+     "season": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Season"
+     }
+    },
+    "type": "object",
+    "required": [
+     "slot_types",
+     "cuisine",
+     "main_ingredient",
+     "batch_cookable",
+     "transportable",
+     "warm",
+     "shelf_days",
+     "season"
+    ],
+    "title": "TagOut"
+   },
    "TargetsOut": {
     "properties": {
      "date": {
@@ -5025,6 +9892,122 @@
     ],
     "title": "TrainingItemOut"
    },
+   "UnassignedLineOut": {
+    "properties": {
+     "line_id": {
+      "type": "integer",
+      "title": "Line Id"
+     },
+     "recipe_id": {
+      "type": "integer",
+      "title": "Recipe Id"
+     },
+     "recipe_title": {
+      "type": "string",
+      "title": "Recipe Title"
+     },
+     "raw_text": {
+      "type": "string",
+      "title": "Raw Text"
+     },
+     "name": {
+      "type": "string",
+      "title": "Name"
+     },
+     "quantity": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Quantity"
+     },
+     "unit": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Unit"
+     },
+     "similar_count": {
+      "type": "integer",
+      "title": "Similar Count"
+     },
+     "suggestions": {
+      "items": {
+       "$ref": "#/components/schemas/MatchOut"
+      },
+      "type": "array",
+      "title": "Suggestions"
+     }
+    },
+    "type": "object",
+    "required": [
+     "line_id",
+     "recipe_id",
+     "recipe_title",
+     "raw_text",
+     "name",
+     "quantity",
+     "unit",
+     "similar_count",
+     "suggestions"
+    ],
+    "title": "UnassignedLineOut"
+   },
+   "UnassignedListOut": {
+    "properties": {
+     "items": {
+      "items": {
+       "$ref": "#/components/schemas/UnassignedLineOut"
+      },
+      "type": "array",
+      "title": "Items"
+     },
+     "total": {
+      "type": "integer",
+      "title": "Total"
+     },
+     "limit": {
+      "type": "integer",
+      "title": "Limit"
+     },
+     "offset": {
+      "type": "integer",
+      "title": "Offset"
+     }
+    },
+    "type": "object",
+    "required": [
+     "items",
+     "total",
+     "limit",
+     "offset"
+    ],
+    "title": "UnassignedListOut"
+   },
+   "UrlIn": {
+    "properties": {
+     "url": {
+      "type": "string",
+      "maxLength": 600,
+      "minLength": 8,
+      "title": "Url"
+     }
+    },
+    "type": "object",
+    "required": [
+     "url"
+    ],
+    "title": "UrlIn"
+   },
    "ValidationError": {
     "properties": {
      "loc": {
@@ -5064,6 +10047,143 @@
      "type"
     ],
     "title": "ValidationError"
+   },
+   "VariantIn": {
+    "properties": {
+     "name": {
+      "type": "string",
+      "maxLength": 120,
+      "minLength": 1,
+      "title": "Name"
+     },
+     "ingredient_id": {
+      "anyOf": [
+       {
+        "type": "integer",
+        "exclusiveMinimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ingredient Id",
+      "description": "Standard: Zutat der Komponente"
+     },
+     "grams_per_unit": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 10000.0,
+        "exclusiveMinimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Grams Per Unit",
+      "description": "z. B. 1 Ei = 60 g"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "name"
+    ],
+    "title": "VariantIn"
+   },
+   "VariantOut": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "component_id": {
+      "type": "integer",
+      "title": "Component Id"
+     },
+     "name": {
+      "type": "string",
+      "title": "Name"
+     },
+     "ingredient_id": {
+      "type": "integer",
+      "title": "Ingredient Id"
+     },
+     "ingredient_name": {
+      "type": "string",
+      "title": "Ingredient Name"
+     },
+     "grams_per_unit": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Grams Per Unit"
+     },
+     "per100": {
+      "$ref": "#/components/schemas/Per100Out"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "component_id",
+     "name",
+     "ingredient_id",
+     "ingredient_name",
+     "grams_per_unit",
+     "per100"
+    ],
+    "title": "VariantOut"
+   },
+   "VariantPatch": {
+    "properties": {
+     "name": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 120,
+        "minLength": 1
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Name"
+     },
+     "ingredient_id": {
+      "anyOf": [
+       {
+        "type": "integer",
+        "exclusiveMinimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ingredient Id"
+     },
+     "grams_per_unit": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 10000.0,
+        "exclusiveMinimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Grams Per Unit"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "title": "VariantPatch"
    },
    "WarningOut": {
     "properties": {

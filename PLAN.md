@@ -249,6 +249,7 @@ Aufwand bei Hobby-Tempo (ca. 5–8 h/Woche). **MVP = Phasen 0–4.** Gesamt grob
 - **Rückblick:** Wöchentlich „geplant vs. gegessen vs. gekauft“, Gewichtstrend, Ersparnis und Makro-Treffer als Zahlen.
 - **Laborverlauf:** Befunde über die Zeit vergleichen, sobald es Folgebefunde gibt.
 - **Kassenbon-Scan** (spätere Option): echte Preise, präzisere Ersparnis.
+- **Rezeptimport aus YouTube-Videos** (spätere Option, nicht für Phase 2; passt zu Phase 6): Machbar. Quellen sind die Videobeschreibung (enthält oft schon die Zutatenliste), die Untertitel bzw. das Transkript (z. B. über `yt-dlp` oder `youtube-transcript-api`) und notfalls die Audiospur per Spracherkennung. Ein Sprachmodell wandelt den Text in das Rezeptformat um (Zutaten mit Mengen, Schritte, Portionen), danach läuft derselbe Weg wie beim Webseiten-Import: Zutaten-Normalisierung, Nährwertberechnung, Vorschau mit manueller Korrektur vor dem Speichern. Grenzen: Mengenangaben werden in Videos oft nur gesprochen oder geschätzt, deshalb immer mit Prüfschritt und Markierung „unsichere Menge“. Nutzungsbedingungen von YouTube beachten (nur für den privaten Gebrauch, Video-Link als Quelle am Rezept speichern, keine Videos speichern).
 - **Backup und Export:** Alle Daten als JSON exportierbar.
 - **Haftung:** Die App gibt Orientierungswerte und keine medizinische oder ernährungstherapeutische Beratung. Mit hohem Trainingsumfang und Defizit ist es sinnvoll, Ziele und Fortschritt mit einer Ärztin/einem Arzt oder einer Ernährungsberatung abzustimmen.
 
@@ -288,7 +289,7 @@ Aufwand bei Hobby-Tempo (ca. 5–8 h/Woche). **MVP = Phasen 0–4.** Gesamt grob
 |---|---|
 | ✅ | Phase 0 – Fundament & Spikes (Details: `docs/SPIKES.md`). Alle technischen Spikes bestanden; der Newsletter-Test läuft parallel weiter (Mails sammeln, Auswertung steht aus) |
 | ✅ | Phase 1 – Gesundheitsdaten & Profile (Spezifikation und Ergebnis: `docs/PHASE1.md`). **1a Backend ✅** (337 Tests, Ende-zu-Ende mit echten Daten auf SQLite und Postgres). **1b Web-Oberfläche ✅** (9 Seiten, 178 Tests, Docker-Image mit Oberfläche gegen Postgres geprüft) |
-| ⬜ | Phase 2 – Rezeptbibliothek & Komponenten |
+| 🔄 | Phase 2 – Rezeptbibliothek & Komponenten (Spezifikation und Ergebnis: `docs/PHASE2.md`). **Code fertig** (Backend 877 Tests, Web 299 Tests, Migration `0002` auf Postgres geprüft, Docker-Image baut). Echte Daten getestet: BLS 4.0 (7.140 Zutaten) und 5 echte Rezepte, 50 von 52 Zeilen automatisch zugeordnet, kcal je Portion ±6 % gegenüber den Seitenangaben bei drei Rezepten. **Offen für die Abnahme:** BLS auf TrueNAS einspielen (`deploy/TRUENAS.md`, Abschnitt 5a), 30–50 Rezepte importieren und Zutaten prüfen, Frühstücks-Baukasten anlegen |
 | ⬜ | Phase 3 – Planer v1 |
 | ⬜ | Phase 4 – Einkaufsliste & PWA *(MVP)* |
 | ⬜ | Phase 5 – Angebote |
@@ -298,6 +299,9 @@ Aufwand bei Hobby-Tempo (ca. 5–8 h/Woche). **MVP = Phasen 0–4.** Gesamt grob
 ### Änderungslog
 | Datum | Änderung |
 |---|---|
+| 2026-10-06 | **Phase 2 gebaut.** Neu: Zutaten-Katalog (BLS 4.0, Synonyme, Stückgewichte), Rezeptimport per URL mit Zutaten-Zuordnung und Prüfliste, Nährwerte und Sättigungsscore, „Passt ins Tagesziel“ (Portionsfaktor, Makroabweichung, Fit-Score) für die angemeldete Person, Frühstücks-Baukasten mit Salz und Passung, Zutaten-Vorlieben. Web-Seiten „Rezepte“, „Frühstück“, „Zutaten“. Echtdaten-Test deckte drei Fehler auf (zu kurze Spalten in Postgres, zu niedrige Zuordnungsquote, falsche Stückgewichte), alle behoben. Sechs Subagenten (Sonnet 5.5) parallel, vom Hauptagenten geprüft. |
+| 2026-10-06 | **Phase 2 gestartet.** Spezifikation `docs/PHASE2.md` erstellt. Entscheidung Nährwertdatenbank: **BLS 4.0** (seit 16.12.2025 kostenlos, ca. 7.140 Lebensmittel, 138 Nährstoffe), Ergänzung manuell oder per Open Food Facts für Markenprodukte, USDA entfällt. Zutaten-Normalisierung über Regeln und Synonyme mit Prüfliste (kein LLM nötig). Neu: Ansicht „Passt ins Tagesziel“ pro Rezept, Person, Tag und Slot (Portionsfaktor, Makroabweichung, Fit-Score). |
+| 2026-10-05 | Idee „Rezeptimport aus YouTube-Videos“ in Abschnitt 7 aufgenommen (spätere Option, passt zu Phase 6, nicht Teil von Phase 2). |
 | 2026-10-04 | Erstfassung des Plans (Architektur, Phasen, Risiken, offene Fragen). |
 | 2026-10-04 | Korrektur: Christian isst unter der Woche nur Frühstück (OMAD). Slot-Modell und Planer-Checks angepasst. |
 | 2026-10-04 | Antworten Runde 1 eingearbeitet: PLZ 01662, Lidl/Aldi Nord/REWE, manueller Datenimport zuerst, pflegbare Vorlieben, Wochenend-Slots bestätigt, Frühstücks-Baukasten, Server (N100, TrueNAS SCALE, Tailscale), Rezeptquellen. |

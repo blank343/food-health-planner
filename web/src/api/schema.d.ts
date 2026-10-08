@@ -463,6 +463,364 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/ingredients": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Zutaten suchen */
+        get: operations["list_ingredients_api_ingredients_get"];
+        put?: never;
+        /** Eigene Zutat anlegen */
+        post: operations["create_ingredient_api_ingredients_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/ingredients/{ingredient_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Zutat mit Synonymen */
+        get: operations["get_ingredient_api_ingredients__ingredient_id__get"];
+        put?: never;
+        post?: never;
+        /** Eigene Zutat löschen */
+        delete: operations["delete_ingredient_api_ingredients__ingredient_id__delete"];
+        options?: never;
+        head?: never;
+        /** Zutat ändern */
+        patch: operations["patch_ingredient_api_ingredients__ingredient_id__patch"];
+        trace?: never;
+    };
+    "/api/ingredients/{ingredient_id}/synonyms": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Synonym hinzufügen */
+        post: operations["add_synonym_api_ingredients__ingredient_id__synonyms_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/ingredients/{ingredient_id}/synonyms/{alias}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Synonym entfernen */
+        delete: operations["remove_synonym_api_ingredients__ingredient_id__synonyms__alias__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/recipes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Rezepte auflisten (optional mit Passung) */
+        get: operations["list_recipes_api_recipes_get"];
+        put?: never;
+        /** Rezept anlegen */
+        post: operations["create_recipe_api_recipes_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/recipes/import-preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Rezept-URL prüfen (nichts wird gespeichert) */
+        post: operations["import_preview_api_recipes_import_preview_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/recipes/import": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Rezept von einer URL importieren und speichern */
+        post: operations["import_recipe_api_recipes_import_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/recipes/{recipe_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Rezept mit Nährwerten */
+        get: operations["get_recipe_api_recipes__recipe_id__get"];
+        put?: never;
+        post?: never;
+        /** Rezept löschen */
+        delete: operations["delete_recipe_api_recipes__recipe_id__delete"];
+        options?: never;
+        head?: never;
+        /** Rezept ändern */
+        patch: operations["patch_recipe_api_recipes__recipe_id__patch"];
+        trace?: never;
+    };
+    "/api/recipes/{recipe_id}/fit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Passt das Rezept ins Mahlzeitenziel der Person? */
+        get: operations["recipe_fit_api_recipes__recipe_id__fit_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/recipes/{recipe_id}/rating": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Eigene Bewertung setzen */
+        put: operations["put_rating_api_recipes__recipe_id__rating_put"];
+        post?: never;
+        /** Eigene Bewertung entfernen */
+        delete: operations["delete_rating_api_recipes__recipe_id__rating_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/recipe-lines/unassigned": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Zutatenzeilen ohne Zuordnung */
+        get: operations["list_unassigned_api_recipe_lines_unassigned_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/recipe-lines/{line_id}/assign": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Zeile einer Zutat zuordnen */
+        post: operations["assign_line_api_recipe_lines__line_id__assign_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/components": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Komponenten: Liste (mit Varianten und Nährwerten) */
+        get: operations["list_components_api_components_get"];
+        put?: never;
+        /** Komponente anlegen */
+        post: operations["create_component_api_components_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/components/seed-defaults": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Standard-Komponenten für das Frühstück anlegen (idempotent)
+         * @description Legt zu den im Zutaten-Katalog gefundenen Zutaten die Standard-Komponenten an. Nicht gefundene Namen stehen in `missing`. Vorhandene Komponenten gleichen Namens werden übersprungen.
+         */
+        post: operations["seed_defaults_api_components_seed_defaults_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/components/meal": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Baukasten-Mahlzeit berechnen (Nährwerte, Sättigung, Passung ins Tagesziel)
+         * @description Mengen je Komponente als `grams` oder `units` (Stück × Gewicht je Einheit der Variante). Mit `slot` (und optional `date`) kommt die Passung ins Slot-Ziel der angemeldeten Person dazu, ohne Portionsskalierung.
+         */
+        post: operations["compute_meal_api_components_meal_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/components/{component_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Komponente lesen */
+        get: operations["get_component_api_components__component_id__get"];
+        put?: never;
+        post?: never;
+        /** Komponente löschen (409, falls noch verwendet) */
+        delete: operations["delete_component_api_components__component_id__delete"];
+        options?: never;
+        head?: never;
+        /** Komponente ändern */
+        patch: operations["update_component_api_components__component_id__patch"];
+        trace?: never;
+    };
+    "/api/components/{component_id}/variants": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Variante anlegen */
+        post: operations["create_variant_api_components__component_id__variants_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/components/{component_id}/variants/{variant_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Variante löschen */
+        delete: operations["delete_variant_api_components__component_id__variants__variant_id__delete"];
+        options?: never;
+        head?: never;
+        /** Variante ändern */
+        patch: operations["update_variant_api_components__component_id__variants__variant_id__patch"];
+        trace?: never;
+    };
+    "/api/me/ingredient-preferences": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Eigene Zutaten-Vorlieben (mit Zutatennamen) */
+        get: operations["list_preferences_api_me_ingredient_preferences_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/ingredient-preferences/{ingredient_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Vorliebe für eine Zutat setzen oder ändern */
+        put: operations["set_preference_api_me_ingredient_preferences__ingredient_id__put"];
+        post?: never;
+        /** Vorliebe für eine Zutat entfernen */
+        delete: operations["delete_preference_api_me_ingredient_preferences__ingredient_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/health": {
         parameters: {
             query?: never;
@@ -504,6 +862,26 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** AssignIn */
+        AssignIn: {
+            /** Ingredient Id */
+            ingredient_id: number;
+            /**
+             * Save Synonym
+             * @default true
+             */
+            save_synonym: boolean;
+        };
+        /** AssignOut */
+        AssignOut: {
+            line: components["schemas"]["LineOut"];
+            /** Assigned Line Ids */
+            assigned_line_ids: number[];
+            /** Recipe Ids */
+            recipe_ids: number[];
+            /** Synonym */
+            synonym: string | null;
+        };
         /** BodyOut */
         BodyOut: {
             /** Weight Kg */
@@ -545,6 +923,88 @@ export interface components {
              * @description Die Datei als Multipart-Feld `file`.
              */
             file: string;
+        };
+        /** ComponentIn */
+        ComponentIn: {
+            /** Name */
+            name: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "protein" | "carb" | "dairy" | "fruit" | "veg" | "other";
+            /** Ingredient Id */
+            ingredient_id: number;
+            /**
+             * Min G
+             * @default 0
+             */
+            min_g: number;
+            /**
+             * Max G
+             * @default 500
+             */
+            max_g: number;
+            /**
+             * Step G
+             * @default 10
+             */
+            step_g: number;
+            /** Typical G */
+            typical_g?: number | null;
+            /**
+             * Weekend Fixed
+             * @default false
+             */
+            weekend_fixed: boolean;
+        };
+        /** ComponentOut */
+        ComponentOut: {
+            /** Id */
+            id: number;
+            /** Name */
+            name: string;
+            /** Kind */
+            kind: string;
+            /** Ingredient Id */
+            ingredient_id: number;
+            /** Ingredient Name */
+            ingredient_name: string;
+            /** Min G */
+            min_g: number;
+            /** Max G */
+            max_g: number;
+            /** Step G */
+            step_g: number;
+            /** Typical G */
+            typical_g: number | null;
+            /** Weekend Fixed */
+            weekend_fixed: boolean;
+            per100: components["schemas"]["Per100Out"];
+            /** Variants */
+            variants: components["schemas"]["VariantOut"][];
+        };
+        /**
+         * ComponentPatch
+         * @description Nur gesendete Felder werden geändert; `typical_g: null` löscht die übliche Menge.
+         */
+        ComponentPatch: {
+            /** Name */
+            name?: string | null;
+            /** Kind */
+            kind?: ("protein" | "carb" | "dairy" | "fruit" | "veg" | "other") | null;
+            /** Ingredient Id */
+            ingredient_id?: number | null;
+            /** Min G */
+            min_g?: number | null;
+            /** Max G */
+            max_g?: number | null;
+            /** Step G */
+            step_g?: number | null;
+            /** Typical G */
+            typical_g?: number | null;
+            /** Weekend Fixed */
+            weekend_fixed?: boolean | null;
         };
         /**
          * DailyOut
@@ -605,6 +1065,34 @@ export interface components {
             /** Last Day */
             last_day: string | null;
         };
+        /** FitOut */
+        FitOut: {
+            /** Slot */
+            slot: string;
+            /**
+             * Date
+             * Format: date
+             */
+            date: string;
+            /** Factor */
+            factor: number;
+            /** Unclamped Factor */
+            unclamped_factor: number;
+            /** Grams */
+            grams: number;
+            scaled: components["schemas"]["NutrientsOut"];
+            /** Deviation Pct */
+            deviation_pct: {
+                [key: string]: number;
+            };
+            /** Fit Score */
+            fit_score: number;
+            /** Notes */
+            notes: string[];
+            slot_target: components["schemas"]["MacroOut"];
+            /** Warnings */
+            warnings: components["schemas"]["WarningOut"][];
+        };
         /** GoalIn */
         GoalIn: {
             /**
@@ -659,6 +1147,201 @@ export interface components {
             started_at: string | null;
             /** Finished At */
             finished_at: string | null;
+        };
+        /** ImportPreviewOut */
+        ImportPreviewOut: {
+            /** Title */
+            title: string;
+            /** Source Url */
+            source_url: string;
+            /** Source Site */
+            source_site: string | null;
+            /** Servings */
+            servings: number | null;
+            /** Prep Min */
+            prep_min: number | null;
+            /** Cook Min */
+            cook_min: number | null;
+            /** Instructions */
+            instructions: string | null;
+            /** Image Url */
+            image_url: string | null;
+            /** Site Nutrients */
+            site_nutrients: {
+                [key: string]: number;
+            };
+            /** Warnings */
+            warnings: string[];
+            /** Lines */
+            lines: components["schemas"]["PreviewLineOut"][];
+        };
+        /** IngredientDetailOut */
+        IngredientDetailOut: {
+            /** Id */
+            id: number;
+            /** Name */
+            name: string;
+            /** Category */
+            category: string | null;
+            /** Source */
+            source: string;
+            /** Source Code */
+            source_code: string | null;
+            nutrients: components["schemas"]["NutrientsPer100Out"];
+            /** Density G Per Ml */
+            density_g_per_ml: number | null;
+            /** Piece G */
+            piece_g: number | null;
+            /** Is Fish */
+            is_fish: boolean;
+            /** Is Potassium Salt */
+            is_potassium_salt: boolean;
+            /** Shelf Days */
+            shelf_days: number | null;
+            /** Hidden */
+            hidden: boolean;
+            /** Synonyms */
+            synonyms: string[];
+        };
+        /**
+         * IngredientIn
+         * @description Eine manuell gepflegte Zutat (Werte je 100 g).
+         */
+        IngredientIn: {
+            /** Name */
+            name: string;
+            /** Category */
+            category?: string | null;
+            /** Kcal 100 */
+            kcal_100?: number | null;
+            /** Protein 100 */
+            protein_100?: number | null;
+            /** Fat 100 */
+            fat_100?: number | null;
+            /** Carb 100 */
+            carb_100?: number | null;
+            /** Fiber 100 */
+            fiber_100?: number | null;
+            /**
+             * Salt 100
+             * @description Salz in g je 100 g
+             */
+            salt_100?: number | null;
+            /**
+             * Micros
+             * @description Schlüssel wie `zinc_mg`, je 100 g
+             */
+            micros?: {
+                [key: string]: number;
+            };
+            /** Density G Per Ml */
+            density_g_per_ml?: number | null;
+            /**
+             * Piece G
+             * @description Gewicht eines Stücks in g
+             */
+            piece_g?: number | null;
+            /**
+             * Is Fish
+             * @default false
+             */
+            is_fish: boolean;
+            /**
+             * Is Potassium Salt
+             * @default false
+             */
+            is_potassium_salt: boolean;
+            /** Shelf Days */
+            shelf_days?: number | null;
+            /**
+             * Hidden
+             * @default false
+             */
+            hidden: boolean;
+        };
+        /** IngredientListOut */
+        IngredientListOut: {
+            /** Items */
+            items: components["schemas"]["IngredientOut"][];
+            /** Total */
+            total: number;
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+        };
+        /** IngredientOut */
+        IngredientOut: {
+            /** Id */
+            id: number;
+            /** Name */
+            name: string;
+            /** Category */
+            category: string | null;
+            /** Source */
+            source: string;
+            /** Source Code */
+            source_code: string | null;
+            nutrients: components["schemas"]["NutrientsPer100Out"];
+            /** Density G Per Ml */
+            density_g_per_ml: number | null;
+            /** Piece G */
+            piece_g: number | null;
+            /** Is Fish */
+            is_fish: boolean;
+            /** Is Potassium Salt */
+            is_potassium_salt: boolean;
+            /** Shelf Days */
+            shelf_days: number | null;
+            /** Hidden */
+            hidden: boolean;
+        };
+        /**
+         * IngredientPatch
+         * @description Teiländerung; nur gesendete Felder gelten.
+         */
+        IngredientPatch: {
+            /** Name */
+            name?: string | null;
+            /** Category */
+            category?: string | null;
+            /** Kcal 100 */
+            kcal_100?: number | null;
+            /** Protein 100 */
+            protein_100?: number | null;
+            /** Fat 100 */
+            fat_100?: number | null;
+            /** Carb 100 */
+            carb_100?: number | null;
+            /** Fiber 100 */
+            fiber_100?: number | null;
+            /** Salt 100 */
+            salt_100?: number | null;
+            /** Micros */
+            micros?: {
+                [key: string]: number;
+            } | null;
+            /** Density G Per Ml */
+            density_g_per_ml?: number | null;
+            /** Piece G */
+            piece_g?: number | null;
+            /** Is Fish */
+            is_fish?: boolean | null;
+            /** Is Potassium Salt */
+            is_potassium_salt?: boolean | null;
+            /** Shelf Days */
+            shelf_days?: number | null;
+            /** Hidden */
+            hidden?: boolean | null;
+        };
+        /** IngredientRefOut */
+        IngredientRefOut: {
+            /** Id */
+            id: number;
+            /** Name */
+            name: string;
+            /** Source */
+            source: string;
         };
         /** LabReportOut */
         LabReportOut: {
@@ -859,6 +1542,44 @@ export interface components {
             /** Report Date */
             report_date: string | null;
         };
+        /**
+         * LineIn
+         * @description Eine Zutatenzeile: Freitext (`raw_text`) oder feste Zutat mit Gramm (`ingredient_id` + `grams`).
+         */
+        LineIn: {
+            /**
+             * Id
+             * @description Vorhandene Zeile behalten (Zuordnung bleibt)
+             */
+            id?: number | null;
+            /** Raw Text */
+            raw_text?: string | null;
+            /** Ingredient Id */
+            ingredient_id?: number | null;
+            /** Grams */
+            grams?: number | null;
+            /** Optional */
+            optional?: boolean | null;
+        };
+        /** LineOut */
+        LineOut: {
+            /** Id */
+            id: number;
+            /** Position */
+            position: number;
+            /** Raw Text */
+            raw_text: string;
+            /** Quantity */
+            quantity: number | null;
+            /** Unit */
+            unit: string | null;
+            /** Grams */
+            grams: number | null;
+            /** Optional */
+            optional: boolean;
+            ingredient: components["schemas"]["IngredientRefOut"] | null;
+            nutrients: components["schemas"]["NutrientsOut"] | null;
+        };
         /** MacroOut */
         MacroOut: {
             /** Kcal */
@@ -897,6 +1618,114 @@ export interface components {
             body_fat_pct: number | null;
             /** Lean Mass Kg */
             lean_mass_kg: number | null;
+        };
+        /** MatchOut */
+        MatchOut: {
+            /** Ingredient Id */
+            ingredient_id: number;
+            /** Name */
+            name: string;
+            /** Score */
+            score: number;
+            /** Via */
+            via: string;
+        };
+        /** MealFitOut */
+        MealFitOut: {
+            /** Slot */
+            slot: string;
+            /**
+             * Date
+             * Format: date
+             */
+            date: string;
+            target: components["schemas"]["MacroOut"];
+            /** Deviation Pct */
+            deviation_pct: {
+                [key: string]: number;
+            };
+            /** Fit Score */
+            fit_score: number;
+            /** Notes */
+            notes: string[];
+            /** Warnings */
+            warnings: components["schemas"]["WarningOut"][];
+        };
+        /** MealIn */
+        MealIn: {
+            /** Items */
+            items: components["schemas"]["MealItemIn"][];
+            /**
+             * Date
+             * @description Stichtag für die Passung, Standard: heute
+             */
+            date?: string | null;
+            /**
+             * Slot
+             * @description Slot für die Passung ins Tagesziel
+             */
+            slot?: ("breakfast" | "lunch" | "dinner" | "snack") | null;
+        };
+        /** MealItemIn */
+        MealItemIn: {
+            /** Component Id */
+            component_id: number;
+            /** Variant Id */
+            variant_id?: number | null;
+            /** Grams */
+            grams?: number | null;
+            /**
+             * Units
+             * @description Stück × Gewicht je Einheit
+             */
+            units?: number | null;
+        };
+        /** MealLineOut */
+        MealLineOut: {
+            /** Component Id */
+            component_id: number;
+            /** Component Name */
+            component_name: string;
+            /** Variant Id */
+            variant_id: number | null;
+            /** Variant Name */
+            variant_name: string | null;
+            /** Ingredient Id */
+            ingredient_id: number;
+            /** Ingredient Name */
+            ingredient_name: string;
+            /** Grams */
+            grams: number;
+            /** Units */
+            units: number | null;
+            nutrients: components["schemas"]["NutrientsOut"];
+        };
+        /** MealOut */
+        MealOut: {
+            total: components["schemas"]["NutrientsOut"];
+            /** Weight G */
+            weight_g: number;
+            /** Energy Density Kcal Per 100G */
+            energy_density_kcal_per_100g: number | null;
+            satiety: components["schemas"]["SatietyOut"];
+            /** Coverage */
+            coverage: number;
+            /** Missing */
+            missing: string[];
+            /** Lines */
+            lines: components["schemas"]["MealLineOut"][];
+            /** Notes */
+            notes: string[];
+            fit: components["schemas"]["MealFitOut"] | null;
+        };
+        /** MyRatingOut */
+        MyRatingOut: {
+            /** Recipe Id */
+            recipe_id: number;
+            /** Person Id */
+            person_id: number;
+            /** Rating */
+            rating: number;
         };
         /** NutrientRuleIn */
         NutrientRuleIn: {
@@ -1013,6 +1842,66 @@ export interface components {
             /** Id */
             id: number;
         };
+        /** NutrientsOut */
+        NutrientsOut: {
+            /** Kcal */
+            kcal: number;
+            /** Protein G */
+            protein_g: number;
+            /** Fat G */
+            fat_g: number;
+            /** Carb G */
+            carb_g: number;
+            /** Fiber G */
+            fiber_g: number;
+            /** Salt G */
+            salt_g: number;
+            /** Micros */
+            micros: {
+                [key: string]: number;
+            };
+        };
+        /** NutrientsPer100Out */
+        NutrientsPer100Out: {
+            /** Kcal */
+            kcal: number | null;
+            /** Protein G */
+            protein_g: number | null;
+            /** Fat G */
+            fat_g: number | null;
+            /** Carb G */
+            carb_g: number | null;
+            /** Fiber G */
+            fiber_g: number | null;
+            /** Salt G */
+            salt_g: number | null;
+            /** Micros */
+            micros: {
+                [key: string]: number;
+            };
+        };
+        /**
+         * Per100Out
+         * @description Nährwerte der Zutat je 100 g (None = unbekannt).
+         */
+        Per100Out: {
+            /** Kcal */
+            kcal: number | null;
+            /** Protein G */
+            protein_g: number | null;
+            /** Fat G */
+            fat_g: number | null;
+            /** Carb G */
+            carb_g: number | null;
+            /** Fiber G */
+            fiber_g: number | null;
+            /** Salt G */
+            salt_g: number | null;
+            /** Micros */
+            micros: {
+                [key: string]: number;
+            };
+        };
         /** PersonOut */
         PersonOut: {
             /** Id */
@@ -1104,6 +1993,264 @@ export interface components {
             single_meal_max_kcal?: number | null;
             /** Source Priority */
             source_priority?: string[];
+        };
+        /** PreferenceIn */
+        PreferenceIn: {
+            /**
+             * Level
+             * @enum {string}
+             */
+            level: "like" | "dislike" | "never";
+        };
+        /** PreferenceOut */
+        PreferenceOut: {
+            /** Ingredient Id */
+            ingredient_id: number;
+            /** Ingredient Name */
+            ingredient_name: string;
+            /** Level */
+            level: string;
+        };
+        /** PreviewLineOut */
+        PreviewLineOut: {
+            /** Raw Text */
+            raw_text: string;
+            /** Name */
+            name: string;
+            /** Quantity */
+            quantity: number | null;
+            /** Unit */
+            unit: string | null;
+            /** Note */
+            note: string | null;
+            /** Optional */
+            optional: boolean;
+            /** Grams */
+            grams: number | null;
+            /** Ingredient Id */
+            ingredient_id: number | null;
+            /** Ingredient Name */
+            ingredient_name: string | null;
+            /** Matches */
+            matches: components["schemas"]["MatchOut"][];
+        };
+        /** RatingIn */
+        RatingIn: {
+            /** Rating */
+            rating: number;
+        };
+        /** RatingOut */
+        RatingOut: {
+            /** Person Id */
+            person_id: number;
+            /** Person Name */
+            person_name: string;
+            /** Rating */
+            rating: number;
+        };
+        /** RecipeCardOut */
+        RecipeCardOut: {
+            /** Id */
+            id: number;
+            /** Title */
+            title: string;
+            /** Image Url */
+            image_url: string | null;
+            /** Source Site */
+            source_site: string | null;
+            /** Favorite */
+            favorite: boolean;
+            /** Status */
+            status: string;
+            /** Servings */
+            servings: number;
+            /** Prep Min */
+            prep_min: number | null;
+            /** Cook Min */
+            cook_min: number | null;
+            tag: components["schemas"]["TagOut"];
+            /** Kcal */
+            kcal: number;
+            /** Protein G */
+            protein_g: number;
+            /** Fat G */
+            fat_g: number;
+            /** Carb G */
+            carb_g: number;
+            /** Serving Weight G */
+            serving_weight_g: number;
+            /** Satiety Score */
+            satiety_score: number;
+            /** Coverage */
+            coverage: number;
+            /** My Rating */
+            my_rating: number | null;
+            /** Avg Rating */
+            avg_rating: number | null;
+            /** Fit Score */
+            fit_score?: number | null;
+            /** Fit Factor */
+            fit_factor?: number | null;
+        };
+        /** RecipeCreate */
+        RecipeCreate: {
+            /** Title */
+            title: string;
+            /**
+             * Servings
+             * @default 1
+             */
+            servings: number;
+            /** Prep Min */
+            prep_min?: number | null;
+            /** Cook Min */
+            cook_min?: number | null;
+            /** Instructions */
+            instructions?: string | null;
+            /** Image Url */
+            image_url?: string | null;
+            /** Source Url */
+            source_url?: string | null;
+            /**
+             * Favorite
+             * @default false
+             */
+            favorite: boolean;
+            /** Notes */
+            notes?: string | null;
+            tag?: components["schemas"]["TagIn"] | null;
+            /** Lines */
+            lines?: components["schemas"]["LineIn"][];
+        };
+        /** RecipeDetailOut */
+        RecipeDetailOut: {
+            /** Id */
+            id: number;
+            /** Title */
+            title: string;
+            /** Image Url */
+            image_url: string | null;
+            /** Source Site */
+            source_site: string | null;
+            /** Favorite */
+            favorite: boolean;
+            /** Status */
+            status: string;
+            /** Servings */
+            servings: number;
+            /** Prep Min */
+            prep_min: number | null;
+            /** Cook Min */
+            cook_min: number | null;
+            tag: components["schemas"]["TagOut"];
+            /** Kcal */
+            kcal: number;
+            /** Protein G */
+            protein_g: number;
+            /** Fat G */
+            fat_g: number;
+            /** Carb G */
+            carb_g: number;
+            /** Serving Weight G */
+            serving_weight_g: number;
+            /** Satiety Score */
+            satiety_score: number;
+            /** Coverage */
+            coverage: number;
+            /** My Rating */
+            my_rating: number | null;
+            /** Avg Rating */
+            avg_rating: number | null;
+            /** Fit Score */
+            fit_score?: number | null;
+            /** Fit Factor */
+            fit_factor?: number | null;
+            /** Source Url */
+            source_url: string | null;
+            /** Instructions */
+            instructions: string | null;
+            /** Notes */
+            notes: string | null;
+            /** Lines */
+            lines: components["schemas"]["LineOut"][];
+            total: components["schemas"]["NutrientsOut"];
+            per_serving: components["schemas"]["NutrientsOut"];
+            /** Total Weight G */
+            total_weight_g: number;
+            /** Energy Density Kcal Per 100G */
+            energy_density_kcal_per_100g: number | null;
+            /** Missing */
+            missing: string[];
+            satiety: components["schemas"]["SatietyOut"];
+            /** Ratings */
+            ratings: components["schemas"]["RatingOut"][];
+            fit?: components["schemas"]["FitOut"] | null;
+            /** Warnings */
+            warnings?: string[];
+        };
+        /** RecipeListOut */
+        RecipeListOut: {
+            /** Items */
+            items: components["schemas"]["RecipeCardOut"][];
+            /** Total */
+            total: number;
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+        };
+        /**
+         * RecipePatch
+         * @description Teiländerung; nur gesendete Felder gelten. `lines` ersetzt alle Zeilen (mit `id` = behalten).
+         */
+        RecipePatch: {
+            /** Title */
+            title?: string | null;
+            /** Servings */
+            servings?: number | null;
+            /** Prep Min */
+            prep_min?: number | null;
+            /** Cook Min */
+            cook_min?: number | null;
+            /** Instructions */
+            instructions?: string | null;
+            /** Image Url */
+            image_url?: string | null;
+            /** Source Url */
+            source_url?: string | null;
+            /** Favorite */
+            favorite?: boolean | null;
+            /** Notes */
+            notes?: string | null;
+            tag?: components["schemas"]["TagIn"] | null;
+            /** Lines */
+            lines?: components["schemas"]["LineIn"][] | null;
+        };
+        /** SatietyOut */
+        SatietyOut: {
+            /** Score */
+            score: number;
+            /** Parts */
+            parts: {
+                [key: string]: number;
+            };
+        };
+        /** SeedOut */
+        SeedOut: {
+            /** Created */
+            created: string[];
+            /** Skipped */
+            skipped: string[];
+            /** Missing */
+            missing: string[];
+            /** Variants Created */
+            variants_created: number;
+            /** Missing Variants */
+            missing_variants: string[];
+            /** Matched */
+            matched: {
+                [key: string]: string;
+            };
         };
         /**
          * SettingsIn
@@ -1266,6 +2413,58 @@ export interface components {
             /** Id */
             id: number;
         };
+        /** SynonymIn */
+        SynonymIn: {
+            /** Alias */
+            alias: string;
+        };
+        /** TagIn */
+        TagIn: {
+            /** Slot Types */
+            slot_types?: ("breakfast" | "lunch" | "dinner" | "snack")[];
+            /** Cuisine */
+            cuisine?: string | null;
+            /** Main Ingredient */
+            main_ingredient?: string | null;
+            /**
+             * Batch Cookable
+             * @default false
+             */
+            batch_cookable: boolean;
+            /**
+             * Transportable
+             * @default false
+             */
+            transportable: boolean;
+            /**
+             * Warm
+             * @default false
+             */
+            warm: boolean;
+            /** Shelf Days */
+            shelf_days?: number | null;
+            /** Season */
+            season?: string | null;
+        };
+        /** TagOut */
+        TagOut: {
+            /** Slot Types */
+            slot_types: string[];
+            /** Cuisine */
+            cuisine: string | null;
+            /** Main Ingredient */
+            main_ingredient: string | null;
+            /** Batch Cookable */
+            batch_cookable: boolean;
+            /** Transportable */
+            transportable: boolean;
+            /** Warm */
+            warm: boolean;
+            /** Shelf Days */
+            shelf_days: number | null;
+            /** Season */
+            season: string | null;
+        };
         /** TargetsOut */
         TargetsOut: {
             /**
@@ -1385,6 +2584,43 @@ export interface components {
             /** Id */
             id: number;
         };
+        /** UnassignedLineOut */
+        UnassignedLineOut: {
+            /** Line Id */
+            line_id: number;
+            /** Recipe Id */
+            recipe_id: number;
+            /** Recipe Title */
+            recipe_title: string;
+            /** Raw Text */
+            raw_text: string;
+            /** Name */
+            name: string;
+            /** Quantity */
+            quantity: number | null;
+            /** Unit */
+            unit: string | null;
+            /** Similar Count */
+            similar_count: number;
+            /** Suggestions */
+            suggestions: components["schemas"]["MatchOut"][];
+        };
+        /** UnassignedListOut */
+        UnassignedListOut: {
+            /** Items */
+            items: components["schemas"]["UnassignedLineOut"][];
+            /** Total */
+            total: number;
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+        };
+        /** UrlIn */
+        UrlIn: {
+            /** Url */
+            url: string;
+        };
         /** ValidationError */
         ValidationError: {
             /** Location */
@@ -1397,6 +2633,46 @@ export interface components {
             input?: unknown;
             /** Context */
             ctx?: Record<string, never>;
+        };
+        /** VariantIn */
+        VariantIn: {
+            /** Name */
+            name: string;
+            /**
+             * Ingredient Id
+             * @description Standard: Zutat der Komponente
+             */
+            ingredient_id?: number | null;
+            /**
+             * Grams Per Unit
+             * @description z. B. 1 Ei = 60 g
+             */
+            grams_per_unit?: number | null;
+        };
+        /** VariantOut */
+        VariantOut: {
+            /** Id */
+            id: number;
+            /** Component Id */
+            component_id: number;
+            /** Name */
+            name: string;
+            /** Ingredient Id */
+            ingredient_id: number;
+            /** Ingredient Name */
+            ingredient_name: string;
+            /** Grams Per Unit */
+            grams_per_unit: number | null;
+            per100: components["schemas"]["Per100Out"];
+        };
+        /** VariantPatch */
+        VariantPatch: {
+            /** Name */
+            name?: string | null;
+            /** Ingredient Id */
+            ingredient_id?: number | null;
+            /** Grams Per Unit */
+            grams_per_unit?: number | null;
         };
         /** WarningOut */
         WarningOut: {
@@ -2837,6 +4113,1046 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["ManualMeasurementOut"];
                 };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_ingredients_api_ingredients_get: {
+        parameters: {
+            query?: {
+                /** @description Suchtext (Teilstring und Ähnlichkeit) */
+                q?: string | null;
+                /** @description Nur Zutaten dieser Quelle */
+                source?: ("bls" | "off" | "manual") | null;
+                limit?: number;
+                offset?: number;
+                /** @description Ausgeblendete Zutaten mit anzeigen */
+                include_hidden?: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IngredientListOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_ingredient_api_ingredients_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["IngredientIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IngredientDetailOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_ingredient_api_ingredients__ingredient_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                ingredient_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IngredientDetailOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_ingredient_api_ingredients__ingredient_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                ingredient_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    patch_ingredient_api_ingredients__ingredient_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                ingredient_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["IngredientPatch"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IngredientDetailOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    add_synonym_api_ingredients__ingredient_id__synonyms_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                ingredient_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SynonymIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IngredientDetailOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    remove_synonym_api_ingredients__ingredient_id__synonyms__alias__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                ingredient_id: number;
+                alias: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_recipes_api_recipes_get: {
+        parameters: {
+            query?: {
+                /** @description Suche im Titel */
+                q?: string | null;
+                /** @description Nur Rezepte, die für diesen Slot getaggt sind */
+                slot?: ("breakfast" | "lunch" | "dinner" | "snack") | null;
+                /** @description Mit `slot`: auch Rezepte ohne Slot-Tag */
+                include_untagged?: boolean;
+                favorite?: boolean | null;
+                status?: ("draft" | "ready" | "needs_review") | null;
+                /** @description Passung für die angemeldete Person */
+                fit_slot?: ("breakfast" | "lunch" | "dinner" | "snack") | null;
+                /** @description Stichtag der Passung, Standard: heute */
+                fit_date?: string | null;
+                sort?: "title" | "newest" | "kcal" | "protein" | "satiety" | "rating" | "fit";
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecipeListOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_recipe_api_recipes_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RecipeCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecipeDetailOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    import_preview_api_recipes_import_preview_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UrlIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ImportPreviewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    import_recipe_api_recipes_import_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UrlIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecipeDetailOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_recipe_api_recipes__recipe_id__get: {
+        parameters: {
+            query?: {
+                /** @description Passung für die angemeldete Person */
+                fit_slot?: ("breakfast" | "lunch" | "dinner" | "snack") | null;
+                /** @description Stichtag der Passung, Standard: heute */
+                fit_date?: string | null;
+            };
+            header?: never;
+            path: {
+                recipe_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecipeDetailOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_recipe_api_recipes__recipe_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                recipe_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    patch_recipe_api_recipes__recipe_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                recipe_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RecipePatch"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecipeDetailOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    recipe_fit_api_recipes__recipe_id__fit_get: {
+        parameters: {
+            query: {
+                /** @description Mahlzeit */
+                slot: "breakfast" | "lunch" | "dinner" | "snack";
+                /** @description Stichtag, Standard: heute */
+                date?: string | null;
+            };
+            header?: never;
+            path: {
+                recipe_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FitOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    put_rating_api_recipes__recipe_id__rating_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                recipe_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RatingIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyRatingOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_rating_api_recipes__recipe_id__rating_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                recipe_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_unassigned_api_recipe_lines_unassigned_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UnassignedListOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    assign_line_api_recipe_lines__line_id__assign_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                line_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AssignIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AssignOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_components_api_components_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ComponentOut"][];
+                };
+            };
+        };
+    };
+    create_component_api_components_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ComponentIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ComponentOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    seed_defaults_api_components_seed_defaults_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SeedOut"];
+                };
+            };
+        };
+    };
+    compute_meal_api_components_meal_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MealIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MealOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_component_api_components__component_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                component_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ComponentOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_component_api_components__component_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                component_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_component_api_components__component_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                component_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ComponentPatch"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ComponentOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_variant_api_components__component_id__variants_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                component_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VariantIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VariantOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_variant_api_components__component_id__variants__variant_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                component_id: number;
+                variant_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_variant_api_components__component_id__variants__variant_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                component_id: number;
+                variant_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VariantPatch"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VariantOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_preferences_api_me_ingredient_preferences_get: {
+        parameters: {
+            query?: {
+                /** @description Nur diese Stufe anzeigen */
+                level?: ("like" | "dislike" | "never") | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PreferenceOut"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    set_preference_api_me_ingredient_preferences__ingredient_id__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                ingredient_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PreferenceIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PreferenceOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_preference_api_me_ingredient_preferences__ingredient_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                ingredient_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Validation Error */
             422: {

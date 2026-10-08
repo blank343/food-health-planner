@@ -1,0 +1,84 @@
+/* Zutaten und Frühstücks-Baukasten: Bausteine dieser beiden Seiten. Farben nur über die Variablen aus ui.css. */
+.vh {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* Reiter */
+.tabs { display: flex; gap: 6px; margin-bottom: 16px; border-bottom: 1px solid var(--border); overflow-x: auto; }
+.tab {
+  flex: 0 0 auto; min-height: 44px; padding: 8px 14px; border: 0; border-bottom: 3px solid transparent;
+  background: transparent; color: var(--muted); font: inherit; font-weight: 600; cursor: pointer;
+}
+.tab[aria-selected="true"] { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* Suche und Trefferliste */
+.filter-grid { display: grid; gap: 0 12px; grid-template-columns: 1fr; }
+@media (min-width: 560px) { .filter-grid { grid-template-columns: 2fr 1fr; } }
+.ing-list { list-style: none; margin: 0 0 12px; padding: 0; }
+.ing-item { margin-bottom: 10px; padding: 12px var(--gutter); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); }
+.ing-name { display: block; width: 100%; text-align: left; border: 0; background: transparent; color: var(--text); font: inherit; font-weight: 700; font-size: 1.05rem; padding: 6px 0; min-height: 44px; cursor: pointer; overflow-wrap: anywhere; }
+.ing-name:hover { color: var(--accent); }
+.nutr-grid { display: grid; gap: 4px 12px; grid-template-columns: repeat(3, 1fr); margin: 6px 0 0; }
+@media (min-width: 560px) { .nutr-grid { grid-template-columns: repeat(6, 1fr); } }
+.nutr-grid div { min-width: 0; }
+.nutr-grid dt { font-size: .75rem; color: var(--muted); }
+.nutr-grid dd { margin: 0; font-weight: 600; }
+
+/* Vorlieben: umschaltbare Gruppe aus Radioknöpfen (Pfeiltasten funktionieren von selbst) */
+.seg { display: flex; flex-wrap: wrap; gap: 8px; border: 0; margin: 0 0 8px; padding: 0; min-width: 0; }
+.seg-opt { position: relative; }
+.seg-opt input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+.seg-opt span {
+  display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 8px 16px;
+  border: 1px solid var(--border); border-radius: 10px; background: var(--surface); color: var(--text); font-weight: 600;
+}
+.seg-opt input:checked + span { background: var(--accent); color: var(--accent-text); border-color: var(--accent); }
+.seg-opt input:checked.never + span { background: var(--danger); color: var(--surface); border-color: var(--danger); }
+.seg-opt input:focus-visible + span { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* Synonyme */
+.chips { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 12px; padding: 0; }
+.chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 4px 2px 12px; background: var(--surface-2); border-radius: 999px; }
+.chip .btn { min-height: 44px; min-width: 44px; padding: 0 10px; border-color: transparent; background: transparent; }
+.inline-form { display: flex; gap: 8px; align-items: flex-end; flex-wrap: wrap; }
+.inline-form .field { flex: 1 1 200px; margin-bottom: 0; }
+
+/* Zutatenauswahl */
+.picker-results { list-style: none; margin: 0 0 12px; padding: 0; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.picker-results li + li { border-top: 1px solid var(--border); }
+.picker-results button { display: flex; justify-content: space-between; gap: 8px; width: 100%; min-height: 44px; padding: 8px 12px; text-align: left; border: 0; background: var(--surface); color: var(--text); font: inherit; cursor: pointer; }
+.picker-results button:hover, .picker-results button:focus-visible { background: var(--accent-soft); }
+.picker-selected { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; padding: 8px 12px; background: var(--accent-soft); border-radius: 10px; margin-bottom: 8px; }
+
+/* Tabellen mit Kennzahlen */
+table.table td.num, table.table th.num { text-align: right; white-space: nowrap; }
+details.micros > summary { cursor: pointer; font-weight: 600; min-height: 44px; display: flex; align-items: center; }
+
+/* Frühstück: Rechner */
+.comp-card { padding: 12px var(--gutter); margin-bottom: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); }
+.comp-card.on { border-color: var(--accent); }
+.amount { display: grid; gap: 8px 12px; grid-template-columns: 1fr; margin-top: 6px; }
+@media (min-width: 560px) { .amount { grid-template-columns: 1fr 140px; align-items: center; } }
+.amount .input { text-align: right; }
+.range { width: 100%; min-height: 44px; margin: 0; accent-color: var(--accent); cursor: pointer; background: transparent; }
+.range::-webkit-slider-thumb { width: 28px; height: 28px; }
+.range::-moz-range-thumb { width: 28px; height: 28px; }
+.sum-bar {
+  position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: baseline;
+  padding: 8px var(--gutter); margin: 0 0 12px; background: var(--surface); border: 1px solid var(--accent);
+  border-radius: var(--radius); box-shadow: var(--shadow); font-weight: 600;
+}
+.sum-bar small { font-weight: 400; }
+.stat-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); margin-bottom: 12px; }
+.stat-salt { border: 2px solid var(--warn); background: var(--warn-soft); }
+.stat-salt .value { color: var(--warn); }
+.fit-row { margin-bottom: 12px; }
+.fit-row .fit-head { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; font-weight: 600; }
+.fit-bar { position: relative; height: 12px; background: var(--surface-2); border-radius: 999px; overflow: hidden; margin-top: 4px; }
+.fit-bar > span { display: block; height: 100%; background: var(--accent); }
+.fit-bar.over > span { background: var(--warn); }
+.fit-bar.low > span { background: var(--info); }
+.preset-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.variant-list { list-style: none; margin: 8px 0 0; padding: 0; }
+.variant-item { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 12px; padding: 6px 0; border-top: 1px solid var(--border); }

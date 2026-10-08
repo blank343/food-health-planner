@@ -19,6 +19,11 @@ dependencies = [
     # Phase 1: Importer und Uploads
     "pdfplumber",
     "python-multipart",
+    # Phase 2: BLS-Import (xlsx), Rezeptimport, Zutaten-Zuordnung
+    "openpyxl",
+    "recipe-scrapers",
+    "rapidfuzz",
+    "httpx",
 ]
 
 [project.optional-dependencies]

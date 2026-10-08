@@ -1,4 +1,4 @@
-"""Datenbankmodell Phase 1 (siehe docs/PHASE1.md, Abschnitt 4).
+"""Datenbankmodell Phase 1 und 2 (siehe docs/PHASE1.md, Abschnitt 4, und docs/PHASE2.md, Abschnitt 3).
 
 Persönliche Werte (Grenzen, Regeln, Ziele, Supplemente, Trainingsplan) sind Daten, nicht Code.
 """
@@ -244,3 +244,158 @@ class ImportJob(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
     started_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     finished_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+
+
+# ---------------------------------------------------------------------------
+# Phase 2: Zutaten, Rezepte, Komponenten (siehe docs/PHASE2.md, Abschnitt 3)
+# ---------------------------------------------------------------------------
+
+
+class Ingredient(Base):
+    """Normalisierte Zutat mit Nährwerten je 100 g (BLS, Open Food Facts oder manuell)."""
+
+    __tablename__ = "ingredient"
+    __table_args__ = (UniqueConstraint("source", "source_code", name="uq_ingredient_source_code"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String(200), index=True)
+    category: Mapped[str | None] = mapped_column(String(120), nullable=True)
+    source: Mapped[str] = mapped_column(String(10))  # bls | off | manual
+    source_code: Mapped[str | None] = mapped_column(String(40), nullable=True)
+    kcal_100: Mapped[float | None] = mapped_column(Float, nullable=True)
+    protein_100: Mapped[float | None] = mapped_column(Float, nullable=True)
+    fat_100: Mapped[float | None] = mapped_column(Float, nullable=True)
+    carb_100: Mapped[float | None] = mapped_column(Float, nullable=True)
+    fiber_100: Mapped[float | None] = mapped_column(Float, nullable=True)
+    salt_100: Mapped[float | None] = mapped_column(Float, nullable=True)
+    # je 100 g: zinc_mg, iron_mg, potassium_mg, magnesium_mg, vit_c_mg, omega3_g, sodium_mg …
+    micros: Mapped[dict] = mapped_column(JsonType, default=dict)
+    density_g_per_ml: Mapped[float | None] = mapped_column(Float, nullable=True)
+    piece_g: Mapped[float | None] = mapped_column(Float, nullable=True)  # Gewicht eines Stücks
+    is_fish: Mapped[bool] = mapped_column(Boolean, default=False)
+    is_potassium_salt: Mapped[bool] = mapped_column(Boolean, default=False)
+    shelf_days: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    hidden: Mapped[bool] = mapped_column(Boolean, default=False)  # aus Suche/Zuordnung ausblenden
+
+
+class IngredientSynonym(Base):
+    __tablename__ = "ingredient_synonym"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    alias: Mapped[str] = mapped_column(String(200), unique=True)  # klein geschrieben, normalisiert
+    ingredient_id: Mapped[int] = mapped_column(ForeignKey("ingredient.id", ondelete="CASCADE"), index=True)
+
+
+class Recipe(Base):
+    __tablename__ = "recipe"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    title: Mapped[str] = mapped_column(String(300))
+    source_url: Mapped[str | None] = mapped_column(String(1000), nullable=True)
+    source_site: Mapped[str | None] = mapped_column(String(120), nullable=True)
+    servings: Mapped[float] = mapped_column(Float, default=1.0)
+    prep_min: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    cook_min: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    instructions: Mapped[str | None] = mapped_column(Text, nullable=True)
+    image_url: Mapped[str | None] = mapped_column(String(1000), nullable=True)
+    favorite: Mapped[bool] = mapped_column(Boolean, default=False)
+    notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+    status: Mapped[str] = mapped_column(String(15), default="draft")  # draft | ready | needs_review
+    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+
+    ingredients: Mapped[list["RecipeIngredient"]] = relationship(
+        back_populates="recipe", cascade="all, delete-orphan", order_by="RecipeIngredient.position"
+    )
+    tag: Mapped["RecipeTag | None"] = relationship(
+        back_populates="recipe", uselist=False, cascade="all, delete-orphan"
+    )
+    ratings: Mapped[list["RecipeRating"]] = relationship(cascade="all, delete-orphan")
+
+
+class RecipeIngredient(Base):
+    __tablename__ = "recipe_ingredient"
+    __table_args__ = (Index("ix_recipe_ingredient_recipe", "recipe_id", "position"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    recipe_id: Mapped[int] = mapped_column(ForeignKey("recipe.id", ondelete="CASCADE"))
+    position: Mapped[int] = mapped_column(Integer, default=0)
+    raw_text: Mapped[str] = mapped_column(Text)
+    quantity: Mapped[float | None] = mapped_column(Float, nullable=True)
+    unit: Mapped[str | None] = mapped_column(String(30), nullable=True)
+    grams: Mapped[float | None] = mapped_column(Float, nullable=True)
+    ingredient_id: Mapped[int | None] = mapped_column(
+        ForeignKey("ingredient.id", ondelete="SET NULL"), nullable=True, index=True
+    )
+    optional: Mapped[bool] = mapped_column(Boolean, default=False)
+
+    recipe: Mapped[Recipe] = relationship(back_populates="ingredients")
+    ingredient: Mapped[Ingredient | None] = relationship()
+
+
+class RecipeTag(Base):
+    __tablename__ = "recipe_tag"
+
+    recipe_id: Mapped[int] = mapped_column(ForeignKey("recipe.id", ondelete="CASCADE"), primary_key=True)
+    slot_types: Mapped[list] = mapped_column(JsonType, default=list)  # breakfast|lunch|dinner|snack
+    cuisine: Mapped[str | None] = mapped_column(String(60), nullable=True)
+    main_ingredient: Mapped[str | None] = mapped_column(String(80), nullable=True)
+    batch_cookable: Mapped[bool] = mapped_column(Boolean, default=False)
+    transportable: Mapped[bool] = mapped_column(Boolean, default=False)
+    warm: Mapped[bool] = mapped_column(Boolean, default=False)
+    shelf_days: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    season: Mapped[str | None] = mapped_column(String(20), nullable=True)
+
+    recipe: Mapped[Recipe] = relationship(back_populates="tag")
+
+
+class RecipeRating(Base):
+    __tablename__ = "recipe_rating"
+
+    recipe_id: Mapped[int] = mapped_column(ForeignKey("recipe.id", ondelete="CASCADE"), primary_key=True)
+    person_id: Mapped[int] = mapped_column(ForeignKey("person.id", ondelete="CASCADE"), primary_key=True)
+    rating: Mapped[int] = mapped_column(Integer)  # 1–5
+    updated_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(), onupdate=func.now())
+
+
+class IngredientPreference(Base):
+    __tablename__ = "ingredient_preference"
+
+    person_id: Mapped[int] = mapped_column(ForeignKey("person.id", ondelete="CASCADE"), primary_key=True)
+    ingredient_id: Mapped[int] = mapped_column(
+        ForeignKey("ingredient.id", ondelete="CASCADE"), primary_key=True
+    )
+    level: Mapped[str] = mapped_column(String(10))  # like | dislike | never
+
+
+class Component(Base):
+    """Baukasten-Bestandteil (Christians Frühstück) mit Mengenspanne."""
+
+    __tablename__ = "component"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String(120))
+    kind: Mapped[str] = mapped_column(String(20))  # protein | carb | dairy | fruit | veg | other
+    ingredient_id: Mapped[int] = mapped_column(ForeignKey("ingredient.id", ondelete="RESTRICT"))
+    min_g: Mapped[float] = mapped_column(Float, default=0.0)
+    max_g: Mapped[float] = mapped_column(Float, default=500.0)
+    step_g: Mapped[float] = mapped_column(Float, default=10.0)
+    typical_g: Mapped[float | None] = mapped_column(Float, nullable=True)
+    weekend_fixed: Mapped[bool] = mapped_column(Boolean, default=False)
+
+    ingredient: Mapped[Ingredient] = relationship()
+    variants: Mapped[list["ComponentVariant"]] = relationship(
+        back_populates="component", cascade="all, delete-orphan"
+    )
+
+
+class ComponentVariant(Base):
+    __tablename__ = "component_variant"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    component_id: Mapped[int] = mapped_column(ForeignKey("component.id", ondelete="CASCADE"), index=True)
+    name: Mapped[str] = mapped_column(String(120))
+    ingredient_id: Mapped[int] = mapped_column(ForeignKey("ingredient.id", ondelete="RESTRICT"))
+    grams_per_unit: Mapped[float | None] = mapped_column(Float, nullable=True)  # z. B. 1 Ei = 60 g
+
+    component: Mapped[Component] = relationship(back_populates="variants")
+    ingredient: Mapped[Ingredient] = relationship()
